@@ -1,0 +1,8 @@
+{
+  "logo": "",
+  "home-banner": "/assets/images/movie-banner.jpg",
+  "low-res-image-path": "https://image.tmdb.org/t/p/w500",
+  "med-res-image-path": "https://image.tmdb.org/t/p/w780",
+  "med2-res-image-path": "https://image.tmdb.org/t/p/w1280",
+  "high-res-image-path": "https://image.tmdb.org/t/p/original"
+}

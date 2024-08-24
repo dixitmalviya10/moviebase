@@ -1,0 +1,68 @@
+// @import "rsuite/styles/index.less";
+
+@layout-padding: 0.5rem;
+// @enable-ripple-effect: false;
+
+// .rs-container {
+//   max-width: 1500px;
+//   margin: auto;
+// }
+
+.fixed-width {
+  max-width: 1400px;
+  margin: auto;
+  width: 100%;
+}
+
+.rs-header {
+  background-color: var(--rs-navbar-inverse-bg);
+  padding-left: @layout-padding;
+  padding-right: @layout-padding;
+}
+
+// .rs-content {
+//   margin-top: 1rem;
+// }
+
+.rs-content,
+.rs-footer {
+  padding-left: @layout-padding;
+  padding-right: @layout-padding;
+}
+
+.home-banner {
+  background: url(/assets/images/movie-banner.jpg);
+  padding: 2rem;
+  color: white;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.space-bottom,
+.latest-trailers {
+  margin-bottom: 2rem;
+}
+
+.latest-trailer-panel {
+  // margin: 1rem;
+  height: 100%;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.latest-trailer-panel:hover {
+  transform: scale(1.05);
+}
+
+.swiper-wrapper {
+  padding-block: 0.5rem;
+}
+
+.circleplay {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
