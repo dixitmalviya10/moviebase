@@ -1,6 +1,6 @@
 import Heading from "rsuite/Heading";
 import { useEffect, useState } from "react";
-import axiosInstance from "../../api/axiosInstance";
+import axiosInstance from "../../lib/axiosInstance";
 import Tabs from "rsuite/Tabs";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -21,6 +21,7 @@ interface TrailerDataArray {
   release_date: string;
   poster_path: string;
   backdrop_path: string;
+  original_language: string;
 }
 
 interface TrailerData {
@@ -47,8 +48,8 @@ const LatestTrailers = () => {
     video: false,
     videos: false,
   });
-  const [activeKey, setActiveKey] = useState("movie/popular");
-  const [open, setOpen] = useState(false);
+  const [activeKey, setActiveKey] = useState<string>("movie/popular");
+  const [open, setOpen] = useState<boolean>(false);
   const [trailerUrl, setTrailerUrl] = useState<TrailerObjInterface>({
     title: "",
     url: "",
@@ -56,7 +57,7 @@ const LatestTrailers = () => {
   const [trailerData, setTrailerData] = useState<TrailerData>({
     results: [],
   });
-  const [backgroundImage, setBackgroundImage] = useState("");
+  const [backgroundImage, setBackgroundImage] = useState<string>("");
 
   useEffect(() => {
     const handleTrailerData = async () => {
@@ -149,6 +150,8 @@ const LatestTrailers = () => {
           backgroundBlendMode: "overlay",
           color: "white",
           padding: "2rem 1rem 0 1rem",
+          overflowX: "hidden", // Set overflowX explicitly
+          overflowY: "auto", // Set overflowY explicitly (if needed)
         }}>
         <Heading>Latest Trailers</Heading>
         <Tabs

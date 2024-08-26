@@ -1,6 +1,6 @@
 import Heading from "rsuite/Heading";
 import { useEffect, useState } from "react";
-import axiosInstance from "../../api/axiosInstance";
+import axiosInstance from "../../lib/axiosInstance";
 import Tabs from "rsuite/Tabs";
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -27,7 +27,6 @@ interface TrendingData {
 const WatchFree = () => {
   const swiperConf = { ...swiperConfig, slidesPerView: 7.5 };
   const [activeKey, setActiveKey] = useState<string>("movie");
-  const [countryCode, setCountryCode] = useState("");
   const [trendingData, setTrendingData] = useState<TrendingData>({
     results: [],
   });
@@ -49,21 +48,6 @@ const WatchFree = () => {
     handleTrendingData();
   }, [activeKey]);
 
-  useEffect(() => {
-    const fetchCountryCode = async () => {
-      try {
-        const response = await fetch(
-          `https://ipinfo.io/json?token=YOUR_API_KEY`
-        );
-        const data = await response.json();
-        setCountryCode(data.country);
-      } catch (error) {
-        console.error("Error fetching country code:", error);
-      }
-    };
-
-    fetchCountryCode();
-  }, []);
   return (
     <>
       <Heading>Free To Watch</Heading>

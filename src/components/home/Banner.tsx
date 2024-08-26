@@ -1,7 +1,7 @@
 import Heading from "rsuite/Heading";
 import AutoComplete from "rsuite/AutoComplete";
 import { useState } from "react";
-import axiosInstance from "../../api/axiosInstance";
+import axiosInstance from "../../lib/axiosInstance";
 
 interface FilteredDataArray {
   readonly id: number;
@@ -50,15 +50,6 @@ const Banner = () => {
         placeholder="Search for a movie, tv show, person..."
         size="lg"
       />
-
-      {/* <FlexboxGrid>
-        {filteredData?.results &&
-          filteredData?.results.map((data) => (
-            <FlexboxGrid.Item key={data?.id} colspan={6}>
-              {data?.name}
-            </FlexboxGrid.Item>
-          ))}
-      </FlexboxGrid> */}
     </>
   );
 };

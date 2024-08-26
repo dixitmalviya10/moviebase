@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import Container from "rsuite/Container";
 import Header from "rsuite/Header";
 import Content from "rsuite/Content";
