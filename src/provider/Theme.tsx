@@ -1,35 +1,39 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, ReactNode } from "react";
 import CustomProvider from "rsuite/CustomProvider";
 
-const ThemeContext = createContext();
+type ThemeType = "light" | "dark";
 
-const getTheme = () => {
-  const theme = localStorage.getItem("theme");
+interface ThemeContextType {
+  theme: ThemeType;
+  toggleTheme: () => void;
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+const getTheme = (): ThemeType => {
+  const theme = localStorage.getItem("theme") as ThemeType;
   if (!theme) {
-    // Default theme is taken as dark-theme
     localStorage.setItem("theme", "light");
     return "light";
-  } else {
-    return theme;
   }
+  return theme;
 };
 
-const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(getTheme);
+interface ThemeProviderProps {
+  children: ReactNode;
+}
 
-  function toggleTheme() {
-    if (theme === "dark") {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    }
-  }
+const ThemeProvider = ({ children }: ThemeProviderProps) => {
+  const [theme, setTheme] = useState<ThemeType>(getTheme);
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
+  };
+
   useEffect(() => {
-    const refreshTheme = () => {
-      localStorage.setItem("theme", theme);
-    };
-    refreshTheme();
+    localStorage.setItem("theme", theme);
   }, [theme]);
+
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <CustomProvider theme={theme}>{children}</CustomProvider>
