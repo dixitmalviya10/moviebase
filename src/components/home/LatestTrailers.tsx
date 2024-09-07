@@ -116,8 +116,8 @@ const LatestTrailers = () => {
       } else {
         setTrailerUrl((prev) => ({
           ...prev,
-          title: "N.A",
-          url: "N.A",
+          title: "Not Available",
+          url: "Not Available",
         }));
       }
     } catch (error) {
@@ -149,7 +149,7 @@ const LatestTrailers = () => {
           backgroundColor: "rgba(255, 0, 150, 0.3)",
           backgroundBlendMode: "overlay",
           color: "white",
-          padding: "2rem 1rem 0 1rem",
+          padding: "2rem 1rem 1rem 1rem",
           overflowX: "hidden", // Set overflowX explicitly
           overflowY: "auto", // Set overflowY explicitly (if needed)
         }}>
@@ -164,16 +164,12 @@ const LatestTrailers = () => {
                 <Placeholder.Graph active />
               ) : (
                 trailerData?.results.map((data) => (
-                  <SwiperSlide
-                    key={data?.id}
-                    style={{ height: "auto" }}
-                    onClick={() => handleOpen(data)}>
+                  <SwiperSlide key={data?.id} onClick={() => handleOpen(data)}>
                     <Panel
                       title={data?.title}
                       className="latest-trailer-panel"
                       shaded
                       bodyFill
-                      style={{ height: "100%", cursor: "pointer" }}
                       onMouseEnter={() =>
                         setBackgroundImage(data?.backdrop_path)
                       }>
@@ -194,16 +190,12 @@ const LatestTrailers = () => {
                 <Placeholder.Graph active />
               ) : (
                 trailerData?.results.map((data) => (
-                  <SwiperSlide
-                    key={data?.id}
-                    style={{ height: "auto" }}
-                    onClick={() => handleOpen(data)}>
+                  <SwiperSlide key={data?.id} onClick={() => handleOpen(data)}>
                     <Panel
                       title={data?.title}
                       className="latest-trailer-panel"
                       shaded
                       bodyFill
-                      style={{ height: "100%", cursor: "pointer" }}
                       onMouseEnter={() =>
                         setBackgroundImage(data?.backdrop_path)
                       }>
@@ -225,16 +217,12 @@ const LatestTrailers = () => {
                 <Placeholder.Graph active />
               ) : (
                 trailerData?.results.map((data) => (
-                  <SwiperSlide
-                    key={data?.id}
-                    style={{ height: "auto" }}
-                    onClick={() => handleOpen(data)}>
+                  <SwiperSlide key={data?.id} onClick={() => handleOpen(data)}>
                     <Panel
                       title={data.name}
                       className="latest-trailer-panel"
                       shaded
                       bodyFill
-                      style={{ height: "100%", cursor: "pointer" }}
                       onMouseEnter={() =>
                         setBackgroundImage(data?.backdrop_path)
                       }>
@@ -258,13 +246,19 @@ const LatestTrailers = () => {
         open={open}
         onClose={handleClose}>
         <Modal.Header>
-          <Modal.Title>{trailerUrl.title}</Modal.Title>
+          <Modal.Title>
+            {isLoading.video ? (
+              <Placeholder.Paragraph active rows={1} />
+            ) : (
+              trailerUrl.title
+            )}
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body style={{ overflowX: "hidden", paddingBottom: 0 }}>
+        <Modal.Body>
           {isLoading.video ? (
             <Placeholder.Graph active />
-          ) : trailerUrl.url === "N.A" ? (
-            <Heading>Trailer Not Available</Heading>
+          ) : trailerUrl.url === "Not Available" ? (
+            <Heading>Not Available</Heading>
           ) : (
             <iframe
               width="100%"

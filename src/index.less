@@ -1,19 +1,111 @@
 // @import "rsuite/styles/index.less";
-
-@layout-padding: 0.5rem;
 // @enable-ripple-effect: false;
 
-// .rs-container {
-//   max-width: 1500px;
-//   margin: auto;
-// }
+@layout-padding: 0.5rem;
 
-a {
-  text-decoration: none;
-  color: initial;
+// Default Overwrites
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
 }
-a:hover {
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: rgba(88, 95, 95, 0.641);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(88, 95, 95, 0.895);
+}
+
+a,
+a:hover,
+a:active,
+a:focus {
+  color: inherit;
   text-decoration: none;
+}
+
+img {
+  object-fit: cover;
+}
+
+iframe {
+  border: none;
+}
+
+.swiper-slide {
+  height: auto;
+}
+
+.swiper-wrapper {
+  padding-block: 0.5rem;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: rgba(66, 57, 57, 0.837);
+}
+
+.swiper-pagination {
+  margin: 0.8rem;
+}
+
+.swiper-pagination-bullet {
+  background: rgba(66, 57, 57, 0.837);
+}
+
+.review-panel {
+  margin: 1rem 2rem;
+}
+
+.rs-header,
+.rs-footer {
+  background-color: var(--rs-navbar-inverse-bg);
+  // padding-left: @layout-padding;
+  // padding-right: @layout-padding;
+}
+
+.rs-content,
+.rs-footer {
+  padding-left: @layout-padding;
+  padding-right: @layout-padding;
+}
+
+.rs-panel {
+  height: 100%;
+}
+
+.rs-modal-header .rs-modal-header-close {
+  font-size: larger;
+}
+
+.rs-modal-body {
+  overflow-x: hidden;
+  padding-bottom: 0;
+}
+
+.rs-progress-circle-info {
+  color: white;
+}
+
+.rs-divider-vertical {
+  width: 2px;
+  min-height: 1.5em;
+}
+
+.rs-message-container {
+  padding: 0.5rem 1rem;
 }
 
 .fixed-width {
@@ -22,29 +114,15 @@ a:hover {
   width: 100%;
 }
 
-.rs-header {
-  background-color: var(--rs-navbar-inverse-bg);
-  padding-left: @layout-padding;
-  padding-right: @layout-padding;
-}
-
-// .rs-content {
-//   margin-top: 1rem;
-// }
-
-.rs-content,
-.rs-footer {
-  padding-left: @layout-padding;
-  padding-right: @layout-padding;
-}
-
 .home-banner {
   background: url(/assets/images/movie-banner.jpg);
-  padding: 2rem;
+  padding: 6rem 2rem 2rem;
+  background-blend-mode: overlay;
   color: white;
+  background-color: rgba(0, 0, 0, 0.5);
   background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-repeat: round;
+  background-size: contain;
 }
 
 .space-bottom,
@@ -64,33 +142,123 @@ a:hover {
   transform: scale(1.05);
 }
 
-.swiper-wrapper {
-  padding-block: 0.5rem;
-}
-
 .circleplay {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-}
-
-.rs-progress-circle-info {
   color: white;
+  box-shadow: 0 0 0.8rem 0.2rem white;
+  border-radius: 50%;
 }
 
 .play-trailer-btn,
 .play-trailer-btn:active,
 .play-trailer-btn:focus {
   box-shadow: 0 0 4px 3px rgba(255, 255, 255, 0.3);
-  color: initial;
+  // color: initial;
 }
 
 .play-trailer-btn:hover {
   box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.3);
-  color: initial;
+  // color: initial;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.gap-sm {
+  gap: 0.5rem;
+}
+
+.gap-md {
+  gap: 1rem;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 // .play-trailer-btn:active {
 //   color: initial;
 // }
+
+.margin-bottom-sm {
+  margin-bottom: 0.5rem;
+}
+
+.margin-bottom-md {
+  margin-bottom: 1rem;
+}
+
+.overflow-y-scroller {
+  overflow-y: auto;
+  max-height: 15rem;
+}
+
+.rating-star-center .rs-tag-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.rs-scroll-view.rs-scroll-view-custom-scrollbar {
+  --rs-scrollbar-bg: none;
+}
+
+.padding-sm {
+  padding-inline: 0.5rem;
+}
+
+.recomm-ratings .rs-progress-circle-info {
+  color: initial;
+  font-size: small;
+}
+
+.thumbnail {
+  cursor: pointer;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.margin-keywords-xs {
+  margin: 0.2rem 0.2rem 0.2rem 0;
+}
+
+.mfooter {
+  padding-block: 2rem;
+  margin-top: 2rem;
+}
+.sub-mfooter {
+  padding-inline: 2rem;
+}
+
+.text-white {
+  color: white;
+}
+
+.underline-text {
+  text-decoration: none;
+}
+
+.underline-text:hover {
+  text-decoration: underline;
+}
+
+.contact-icons {
+  color: white;
+}
+
+.contact-icons:hover,
+.contact-icons:active,
+.contact-icons:focus {
+  color: white;
+}

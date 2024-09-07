@@ -1,0 +1,15 @@
+export const configs = {
+  MOVIE: "MOVIE",
+  TV: "TV",
+  PERSON: "PERSON",
+  logo: "",
+  "home-banner": "/assets/images/movie-banner.jpg",
+  "low-res-image-path": "https://image.tmdb.org/t/p/w500",
+  "med-res-image-path": "https://image.tmdb.org/t/p/w780",
+  "med2-res-image-path": "https://image.tmdb.org/t/p/w1280",
+  "high-res-image-path": "https://image.tmdb.org/t/p/original",
+  "no-image": "/assets/images/no-image.png",
+  "no-image2": "/public/assets/images/Image_not_available.png",
+  "no-image3": "/public/assets/images/no-image-icon-23500.jpg",
+  "no-photo": "/public/assets/images/no-photo.jpg",
+};
