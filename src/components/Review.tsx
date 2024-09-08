@@ -16,7 +16,6 @@ import "swiper/css/navigation";
 import { Pagination, Navigation, Mousewheel, Keyboard } from "swiper/modules";
 import { Star } from "lucide-react";
 const Review = ({
-  type,
   reviews,
 }: {
   type: string;

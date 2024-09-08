@@ -1,41 +1,43 @@
-import { useEffect, useState } from "react";
-import axiosInstance from "../../../lib/axiosInstance";
-import Heading from "rsuite/Heading";
-import { Link, useParams } from "react-router-dom";
-import Text from "rsuite/Text";
-import Modal from "rsuite/Modal";
-import Stack from "rsuite/Stack";
-import HStack from "rsuite/HStack";
-import VStack from "rsuite/VStack";
-import config from "../../../configs/configs.json";
-import Tooltip from "rsuite/Tooltip";
-import Whisper from "rsuite/Whisper";
-import Progress from "rsuite/Progress";
-import Placeholder from "rsuite/Placeholder";
-import Panel from "rsuite/Panel";
+import { useEffect, useState } from 'react';
+import axiosInstance from '../../../lib/axiosInstance';
+import Heading from 'rsuite/Heading';
+import { Link, useParams } from 'react-router-dom';
+import Text from 'rsuite/Text';
+import Modal from 'rsuite/Modal';
+import Stack from 'rsuite/Stack';
+import HStack from 'rsuite/HStack';
+import VStack from 'rsuite/VStack';
+import config from '../../../configs/configs.json';
+import Tooltip from 'rsuite/Tooltip';
+import Whisper from 'rsuite/Whisper';
+import Progress from 'rsuite/Progress';
+import Placeholder from 'rsuite/Placeholder';
+import Panel from 'rsuite/Panel';
 import {
   Facebook,
   Instagram,
   Play,
   Twitter,
   Link as LucideLink,
-} from "lucide-react";
-import { Button, Message } from "rsuite";
-import Divider from "rsuite/Divider";
-import FlexboxGrid from "rsuite/FlexboxGrid";
-import Cast from "../../../components/Cast";
-import { formatDate } from "../../../lib/formatDate";
-import Grid from "rsuite/Grid";
-import Row from "rsuite/Row";
-import Col from "rsuite/Col";
-import { formatRuntime } from "../../../lib/formatRuntime";
-import Review from "../../../components/Review";
-import { configs } from "../../../configs/constants";
-import Media from "../../../components/Media";
-import Recommendations from "../../../components/Recommendations";
-import intlNumberFormatter from "../../../utils/intlNumberFormatter";
+} from 'lucide-react';
+import { Button, Message } from 'rsuite';
+import Divider from 'rsuite/Divider';
+import FlexboxGrid from 'rsuite/FlexboxGrid';
+import Cast from '../../../components/Cast';
+import { formatDate } from '../../../lib/formatDate';
+import Grid from 'rsuite/Grid';
+import Row from 'rsuite/Row';
+import Col from 'rsuite/Col';
+import { formatRuntime } from '../../../lib/formatRuntime';
+import Review from '../../../components/Review';
+import { configs } from '../../../configs/constants';
+import Media from '../../../components/Media';
+import Recommendations from '../../../components/Recommendations';
+import intlNumberFormatter from '../../../utils/intlNumberFormatter';
 
 // import ImageBackgroundDetector from "../../components/ImageBackgroundDetector";
+
+type Params = { id: string };
 
 interface MovieDataInterface {
   id: number;
@@ -67,7 +69,7 @@ interface MovieDataInterface {
     }[];
     crew: { id: number; name: string; job: string; department: string }[];
   };
-  "watch/providers"?: {
+  'watch/providers'?: {
     results: {
       IN: {
         flatrate: { id: number; name: string; logo_path: string }[];
@@ -107,7 +109,7 @@ interface TrailerObjInterface {
   url: string;
 }
 
-type FilteredCrewMember = Omit<CrewMember, "job"> & {
+type FilteredCrewMember = Omit<CrewMember, 'job'> & {
   job: string[];
   name: string;
 };
@@ -115,82 +117,82 @@ type FilteredCrewMember = Omit<CrewMember, "job"> & {
 const MovieDetails = () => {
   const initialMovieData: MovieDataInterface = {
     id: 0,
-    title: "",
-    backdrop_path: "",
+    title: '',
+    backdrop_path: '',
     budget: 0,
-    poster_path: "",
-    release_date: "",
+    poster_path: '',
+    release_date: '',
     release_dates: {
-      iso_3166_1: "IN",
-      release_dates: [{ certification: "", iso_639_1: "", release_date: "" }],
+      iso_3166_1: 'IN',
+      release_dates: [{ certification: '', iso_639_1: '', release_date: '' }],
     },
     genres: [],
     runtime: 0,
     vote_average: 0,
-    tagline: "",
-    overview: "",
+    tagline: '',
+    overview: '',
     credits: { cast: [], crew: [] },
-    "watch/providers": {
+    'watch/providers': {
       results: {
         IN: {
-          flatrate: [{ id: 0, name: "", logo_path: "" }],
-          link: "",
+          flatrate: [{ id: 0, name: '', logo_path: '' }],
+          link: '',
         },
       },
     },
     reviews: {
       results: [
         {
-          id: "",
-          author_details: { avatar_path: "", name: "", rating: 0 },
-          content: "",
-          created_at: "",
+          id: '',
+          author_details: { avatar_path: '', name: '', rating: 0 },
+          content: '',
+          created_at: '',
         },
       ],
     },
     external_ids: {
-      facebook_id: "",
-      imdb_id: "",
-      instagram_id: "",
-      twitter_id: "",
+      facebook_id: '',
+      imdb_id: '',
+      instagram_id: '',
+      twitter_id: '',
     },
-    homepage: "",
-    status: "",
-    original_language: "",
+    homepage: '',
+    status: '',
+    original_language: '',
     revenue: 0,
-    keywords: { keywords: [{ name: "", id: null }] },
+    keywords: { keywords: [{ name: '', id: null }] },
   };
   const [movieData, setMovieData] =
     useState<MovieDataInterface>(initialMovieData);
   const [reloader, setReloader] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const params = useParams();
+  const params: Params = useParams();
   const [trailerUrl, setTrailerUrl] = useState<TrailerObjInterface>({
-    title: "",
-    url: "",
+    title: '',
+    url: '',
   });
   const userScore = Math.round((movieData.vote_average * 100) / 10);
   useEffect(() => {
-    const movieID = params.id?.split("-")[0];
+    const movieID = params.id?.split('-')[0];
     const handleTrendingData = async () => {
       try {
         const response = await axiosInstance.get(`/movie/${movieID}`, {
           params: {
             append_to_response:
-              "release_dates,credits,watch/providers,reviews,external_ids,keywords,videos",
+              'release_dates,credits,watch/providers,reviews,external_ids,keywords,videos',
           },
         });
         const filteredData = {
           ...response?.data,
           release_dates: response?.data?.release_dates?.results.find(
             (data: { iso_3166_1: string }) =>
-              data?.iso_3166_1 === "IN" || data?.iso_3166_1 === "US"
+              data?.iso_3166_1 === 'IN' || data?.iso_3166_1 === 'US',
           ),
         };
         setMovieData(filteredData);
         const trailers = response.data?.videos?.results.filter(
           (video: { type: string; site: string }) =>
-            video.type === "Trailer" && video.site === "YouTube"
+            video.type === 'Trailer' && video.site === 'YouTube',
         );
         if (trailers.length > 0) {
           setTrailerUrl((prev) => ({
@@ -201,10 +203,10 @@ const MovieDetails = () => {
         }
         window.scrollTo({
           top: 0,
-          behavior: "smooth",
+          behavior: 'smooth',
         });
       } catch (error) {
-        console.log("error", error);
+        console.log('error', error);
       }
     };
     handleTrendingData();
@@ -213,12 +215,12 @@ const MovieDetails = () => {
   const crewData: FilteredCrewMember[] = movieData?.credits?.crew
     ?.filter(
       (detail: CrewMember) =>
-        detail?.job === "Writer" ||
-        detail?.job === "Director" ||
-        detail?.job === "Story" ||
-        detail?.job === "Screenplay" ||
-        detail?.job === "Characters" ||
-        detail?.job === "Creator"
+        detail?.job === 'Writer' ||
+        detail?.job === 'Director' ||
+        detail?.job === 'Story' ||
+        detail?.job === 'Screenplay' ||
+        detail?.job === 'Characters' ||
+        detail?.job === 'Creator',
     )
     .reduce((acc: FilteredCrewMember[], current: CrewMember) => {
       const existing = acc.find((item) => item.id === current.id);
@@ -241,109 +243,114 @@ const MovieDetails = () => {
     setReloader(value);
   };
 
-  console.log("mocviii", movieData);
+  console.log('mocviii', movieData);
 
   return (
     <>
       <div
         style={{
-          backgroundImage: `url(${config["med2-res-image-path"]}${movieData.backdrop_path})`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          backgroundColor: "rgba(0, 0, 0, 0.7)",
-          backgroundBlendMode: "overlay",
-          padding: "3rem 2rem",
-          marginBottom: "1rem",
-        }}>
+          backgroundImage: `url(${config['med2-res-image-path']}${movieData.backdrop_path})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          backgroundBlendMode: 'overlay',
+          padding: '3rem 2rem',
+          marginBottom: '1rem',
+        }}
+      >
         <Stack spacing={50} alignItems="flex-start">
           <Panel
             shaded
             bodyFill
             bordered
-            style={{ display: "inline-block", width: 250 }}>
+            style={{ display: 'inline-block', width: 250 }}
+          >
             <img
-              src={config["med-res-image-path"] + movieData.poster_path}
-              width={"100%"}
+              src={config['med-res-image-path'] + movieData.poster_path}
+              width={'100%'}
             />
-            {movieData?.["watch/providers"]?.results?.IN?.flatrate?.map(
+            {movieData?.['watch/providers']?.results?.IN?.flatrate?.map(
               (data) => (
                 <div className="flex-center" key={data.id}>
                   <img
-                    src={config["med-res-image-path"] + data.logo_path}
+                    src={config['med-res-image-path'] + data.logo_path}
                     width={40}
                     style={{ margin: 5, borderRadius: 3 }}
                     alt={data?.name}
                   />
                   <div>
-                    <Text weight="bold" style={{ color: "lightgray" }}>
+                    <Text weight="bold" style={{ color: 'lightgray' }}>
                       Now Streaming
                     </Text>
-                    <Text weight="bold" style={{ color: "white" }}>
+                    <Text weight="bold" style={{ color: 'white' }}>
                       <Link
                         to={
-                          movieData?.["watch/providers"]?.results?.IN?.link ||
-                          "/"
+                          movieData?.['watch/providers']?.results?.IN?.link ||
+                          '/'
                         }
-                        target="_blank">
+                        target="_blank"
+                      >
                         Watch Now
                       </Link>
                     </Text>
                   </div>
                 </div>
-              )
+              ),
             )}
           </Panel>
-          <VStack spacing={30} style={{ color: "white" }}>
+          <VStack spacing={30} style={{ color: 'white' }}>
             <div>
               <Heading level={2}>
                 {movieData?.title}
                 {movieData?.release_date
-                  ? ` (${movieData?.release_date.split("-")[0]})`
-                  : ""}
+                  ? ` (${movieData?.release_date.split('-')[0]})`
+                  : ''}
               </Heading>
 
               <HStack spacing={10}>
                 <Text
                   style={{
-                    color: "white",
-                    border: "1px solid white",
-                    display: "inline-block",
+                    color: 'white',
+                    border: '1px solid white',
+                    display: 'inline-block',
                     paddingInline: 3,
                   }}
                   weight="thin"
-                  size="md">
-                  {movieData?.release_dates?.release_dates[0]?.certification}{" "}
+                  size="md"
+                >
+                  {movieData?.release_dates?.release_dates[0]?.certification}{' '}
                 </Text>
-                <Text style={{ display: "inline-block", color: "white" }}>
+                <Text style={{ display: 'inline-block', color: 'white' }}>
                   {formatDate(
-                    movieData?.release_dates?.release_dates[0]?.release_date
-                  )}{" "}
+                    movieData?.release_dates?.release_dates[0]?.release_date,
+                  )}{' '}
                   {movieData?.release_dates &&
                     `(${movieData?.release_dates?.iso_3166_1})`}
                 </Text>
-                <Text style={{ display: "inline-block", color: "white" }}>
+                <Text style={{ display: 'inline-block', color: 'white' }}>
                   •
                 </Text>
-                <Text style={{ display: "inline-block", color: "white" }}>
-                  {movieData?.genres.map((genre) => genre.name).join(", ")}
+                <Text style={{ display: 'inline-block', color: 'white' }}>
+                  {movieData?.genres.map((genre) => genre.name).join(', ')}
                 </Text>
-                <Text style={{ display: "inline-block", color: "white" }}>
+                <Text style={{ display: 'inline-block', color: 'white' }}>
                   •
                 </Text>
-                <Text style={{ display: "inline-block", color: "white" }}>
+                <Text style={{ display: 'inline-block', color: 'white' }}>
                   {formatRuntime(movieData.runtime)}
                 </Text>
               </HStack>
             </div>
 
             <HStack spacing={20}>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div
                   style={{
                     width: 60,
-                    display: "inline-block",
-                  }}>
+                    display: 'inline-block',
+                  }}
+                >
                   <Progress.Circle
                     trailColor="#ffff0075"
                     percent={userScore}
@@ -360,7 +367,8 @@ const MovieDetails = () => {
                 onClick={() => setOpen(true)}
                 active
                 size="xs"
-                className="play-trailer-btn">
+                className="play-trailer-btn"
+              >
                 <Play size={20} style={{ marginRight: 3 }} />
                 Play Trailer
               </Button>
@@ -371,29 +379,32 @@ const MovieDetails = () => {
                 size={15}
                 as="i"
                 style={{
-                  color: "wheat",
+                  color: 'wheat',
                 }}
-                weight="semibold">
+                weight="semibold"
+              >
                 {movieData.tagline}
               </Text>
               <div>
                 <Heading level={4}>Overview</Heading>
                 <Text
                   style={{
-                    color: "white",
-                  }}>
+                    color: 'white',
+                  }}
+                >
                   {movieData.overview}
                 </Text>
               </div>
               <FlexboxGrid
                 style={{
-                  width: "100%",
-                  rowGap: "1.5rem",
-                }}>
+                  width: '100%',
+                  rowGap: '1.5rem',
+                }}
+              >
                 {crewData?.map((detail, index) => (
                   <FlexboxGrid.Item key={index} colspan={8}>
                     <Heading level={6}>{detail.name}</Heading>
-                    {detail.job.join(", ")}
+                    {detail.job.join(', ')}
                   </FlexboxGrid.Item>
                 ))}
               </FlexboxGrid>
@@ -448,11 +459,13 @@ const MovieDetails = () => {
                               <Tooltip>
                                 Visit <i>Facebook</i>
                               </Tooltip>
-                            }>
+                            }
+                          >
                             <Link
                               target="_blank"
                               rel="noopener noreferrer"
-                              to={`https://www.facebook.com/${movieData.external_ids.facebook_id}`}>
+                              to={`https://www.facebook.com/${movieData.external_ids.facebook_id}`}
+                            >
                               <Facebook size={30} />
                             </Link>
                           </Whisper>
@@ -466,11 +479,13 @@ const MovieDetails = () => {
                               <Tooltip>
                                 Visit <i>Twitter</i>
                               </Tooltip>
-                            }>
+                            }
+                          >
                             <Link
                               target="_blank"
                               rel="noopener noreferrer"
-                              to={`https://www.twitter.com/${movieData.external_ids.twitter_id}`}>
+                              to={`https://www.twitter.com/${movieData.external_ids.twitter_id}`}
+                            >
                               <Twitter size={30} />
                             </Link>
                           </Whisper>
@@ -484,11 +499,13 @@ const MovieDetails = () => {
                               <Tooltip>
                                 Visit <i>Instagram</i>
                               </Tooltip>
-                            }>
+                            }
+                          >
                             <Link
                               target="_blank"
                               rel="noopener noreferrer"
-                              to={`https://www.instagram.com/${movieData.external_ids.instagram_id}`}>
+                              to={`https://www.instagram.com/${movieData.external_ids.instagram_id}`}
+                            >
                               <Instagram size={30} />
                             </Link>
                           </Whisper>
@@ -506,11 +523,13 @@ const MovieDetails = () => {
                         <Tooltip>
                           Visit <i>Homepage</i>
                         </Tooltip>
-                      }>
+                      }
+                    >
                       <Link
                         to={movieData.homepage}
                         target="_blank"
-                        rel="noopener noreferrer">
+                        rel="noopener noreferrer"
+                      >
                         <LucideLink size={30} />
                       </Link>
                     </Whisper>
@@ -535,8 +554,8 @@ const MovieDetails = () => {
                 </Text>
                 <Text size={16}>
                   {movieData?.budget
-                    ? "$" + intlNumberFormatter(movieData?.budget)
-                    : "Not Available"}
+                    ? '$' + intlNumberFormatter(movieData?.budget)
+                    : 'Not Available'}
                 </Text>
               </div>
               <div>
@@ -545,8 +564,8 @@ const MovieDetails = () => {
                 </Text>
                 <Text size={16}>
                   {movieData?.budget
-                    ? "$" + intlNumberFormatter(movieData?.revenue)
-                    : "Not Available"}
+                    ? '$' + intlNumberFormatter(movieData?.revenue)
+                    : 'Not Available'}
                 </Text>
               </div>
               <div>
@@ -566,8 +585,8 @@ const MovieDetails = () => {
               <div>
                 <Message>
                   <strong>
-                    Vote Average:{" "}
-                    {userScore ? userScore + "%" : "Not Available"}
+                    Vote Average:{' '}
+                    {userScore ? userScore + '%' : 'Not Available'}
                   </strong>
                 </Message>
               </div>
@@ -580,7 +599,8 @@ const MovieDetails = () => {
         backdrop={true}
         keyboard={false}
         open={open}
-        onClose={() => setOpen(false)}>
+        onClose={() => setOpen(false)}
+      >
         <Modal.Header>
           <Modal.Title>
             {!trailerUrl.title ? (
@@ -591,7 +611,7 @@ const MovieDetails = () => {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {trailerUrl.url === "Not Available" ? (
+          {trailerUrl.url === 'Not Available' ? (
             <Heading>Not Available</Heading>
           ) : (
             <iframe
@@ -600,7 +620,8 @@ const MovieDetails = () => {
               src={trailerUrl.url}
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen></iframe>
+              allowFullScreen
+            ></iframe>
           )}
         </Modal.Body>
       </Modal>

@@ -1,17 +1,17 @@
-import Heading from "rsuite/Heading";
-import { useEffect, useState } from "react";
-import axiosInstance from "../../lib/axiosInstance";
-import Tabs from "rsuite/Tabs";
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/scrollbar";
-import { Swiper, SwiperSlide } from "swiper/react";
-import Panel from "rsuite/Panel";
-import Placeholder from "rsuite/Placeholder";
-import Modal from "rsuite/Modal";
-import config from "../../configs/configs.json";
-import { CirclePlay } from "lucide-react";
-import { swiperConfig } from "../../lib/swiperConfig";
+import Heading from 'rsuite/Heading';
+import { useEffect, useState } from 'react';
+import axiosInstance from '../../lib/axiosInstance';
+import Tabs from 'rsuite/Tabs';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import 'swiper/css/scrollbar';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import Panel from 'rsuite/Panel';
+import Placeholder from 'rsuite/Placeholder';
+import Modal from 'rsuite/Modal';
+import config from '../../configs/configs.json';
+import { CirclePlay } from 'lucide-react';
+import { swiperConfig } from '../../lib/swiperConfig';
 
 interface TrailerDataArray {
   readonly id: number;
@@ -48,16 +48,16 @@ const LatestTrailers = () => {
     video: false,
     videos: false,
   });
-  const [activeKey, setActiveKey] = useState<string>("movie/popular");
+  const [activeKey, setActiveKey] = useState<string>('movie/popular');
   const [open, setOpen] = useState<boolean>(false);
   const [trailerUrl, setTrailerUrl] = useState<TrailerObjInterface>({
-    title: "",
-    url: "",
+    title: '',
+    url: '',
   });
   const [trailerData, setTrailerData] = useState<TrailerData>({
     results: [],
   });
-  const [backgroundImage, setBackgroundImage] = useState<string>("");
+  const [backgroundImage, setBackgroundImage] = useState<string>('');
 
   useEffect(() => {
     const handleTrailerData = async () => {
@@ -67,7 +67,7 @@ const LatestTrailers = () => {
         setTrailerData(response?.data);
         setBackgroundImage(response?.data?.results[0]?.backdrop_path);
       } catch (error) {
-        console.log("error", error);
+        console.log('error', error);
       } finally {
         setIsLoading((prev) => ({ ...prev, videos: false }));
       }
@@ -81,7 +81,7 @@ const LatestTrailers = () => {
       const response = await axiosInstance.get(`movie/${data.id}/videos`);
       const trailers = response.data.results.filter(
         (video: { type: string; site: string }) =>
-          video.type === "Trailer" && video.site === "YouTube"
+          video.type === 'Trailer' && video.site === 'YouTube',
       );
       if (trailers.length > 0) {
         setTrailerUrl((prev) => ({
@@ -91,7 +91,7 @@ const LatestTrailers = () => {
         }));
       }
     } catch (error) {
-      console.error("Error fetching trailer:", error);
+      console.error('Error fetching trailer:', error);
     } finally {
       setIsLoading((prev) => ({ ...prev, video: false }));
     }
@@ -105,7 +105,7 @@ const LatestTrailers = () => {
       });
       const trailers = response.data.results.filter(
         (video: { type: string; site: string }) =>
-          video.type === "Trailer" && video.site === "YouTube"
+          video.type === 'Trailer' && video.site === 'YouTube',
       );
       if (trailers.length > 0) {
         setTrailerUrl((prev) => ({
@@ -116,12 +116,12 @@ const LatestTrailers = () => {
       } else {
         setTrailerUrl((prev) => ({
           ...prev,
-          title: "Not Available",
-          url: "Not Available",
+          title: 'Not Available',
+          url: 'Not Available',
         }));
       }
     } catch (error) {
-      console.error("Error fetching trailer:", error);
+      console.error('Error fetching trailer:', error);
     } finally {
       setIsLoading((prev) => ({ ...prev, video: false }));
     }
@@ -142,22 +142,24 @@ const LatestTrailers = () => {
     <>
       <div
         style={{
-          backgroundImage: `url(${config["med2-res-image-path"]}${backgroundImage})`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-          backgroundColor: "rgba(255, 0, 150, 0.3)",
-          backgroundBlendMode: "overlay",
-          color: "white",
-          padding: "2rem 1rem 1rem 1rem",
-          overflowX: "hidden", // Set overflowX explicitly
-          overflowY: "auto", // Set overflowY explicitly (if needed)
-        }}>
+          backgroundImage: `url(${config['med2-res-image-path']}${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+          backgroundColor: 'rgba(255, 0, 150, 0.3)',
+          backgroundBlendMode: 'overlay',
+          color: 'white',
+          padding: '2rem 1rem 1rem 1rem',
+          overflowX: 'hidden', // Set overflowX explicitly
+          overflowY: 'auto', // Set overflowY explicitly (if needed)
+        }}
+      >
         <Heading>Latest Trailers</Heading>
         <Tabs
           defaultActiveKey="movie/popular"
           appearance="pills"
-          onSelect={(value: any) => setActiveKey(value)}>
+          onSelect={(eventKey) => setActiveKey(eventKey)}
+        >
           <Tabs.Tab eventKey="movie/popular" title="Popular">
             <Swiper {...swiperConfig}>
               {isLoading.videos ? (
@@ -172,9 +174,10 @@ const LatestTrailers = () => {
                       bodyFill
                       onMouseEnter={() =>
                         setBackgroundImage(data?.backdrop_path)
-                      }>
+                      }
+                    >
                       <img
-                        src={config["low-res-image-path"] + data?.backdrop_path}
+                        src={config['low-res-image-path'] + data?.backdrop_path}
                         width="100%"
                       />
                       <CirclePlay className="circleplay" size={60} />
@@ -198,9 +201,10 @@ const LatestTrailers = () => {
                       bodyFill
                       onMouseEnter={() =>
                         setBackgroundImage(data?.backdrop_path)
-                      }>
+                      }
+                    >
                       <img
-                        src={config["low-res-image-path"] + data?.backdrop_path}
+                        src={config['low-res-image-path'] + data?.backdrop_path}
                         width="100%"
                       />
                       <CirclePlay className="circleplay" size={60} />
@@ -225,9 +229,10 @@ const LatestTrailers = () => {
                       bodyFill
                       onMouseEnter={() =>
                         setBackgroundImage(data?.backdrop_path)
-                      }>
+                      }
+                    >
                       <img
-                        src={config["low-res-image-path"] + data?.backdrop_path}
+                        src={config['low-res-image-path'] + data?.backdrop_path}
                         width="100%"
                       />
                       <CirclePlay className="circleplay" size={60} />
@@ -244,7 +249,8 @@ const LatestTrailers = () => {
         backdrop={true}
         keyboard={false}
         open={open}
-        onClose={handleClose}>
+        onClose={handleClose}
+      >
         <Modal.Header>
           <Modal.Title>
             {isLoading.video ? (
@@ -257,7 +263,7 @@ const LatestTrailers = () => {
         <Modal.Body>
           {isLoading.video ? (
             <Placeholder.Graph active />
-          ) : trailerUrl.url === "Not Available" ? (
+          ) : trailerUrl.url === 'Not Available' ? (
             <Heading>Not Available</Heading>
           ) : (
             <iframe
@@ -266,7 +272,8 @@ const LatestTrailers = () => {
               src={trailerUrl.url}
               title="YouTube video player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen></iframe>
+              allowFullScreen
+            ></iframe>
           )}
         </Modal.Body>
       </Modal>

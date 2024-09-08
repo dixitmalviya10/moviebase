@@ -45,16 +45,16 @@ interface MovieDataInterface {
   };
 }
 
-interface CrewMember {
-  id: number;
-  job: string | string[];
-  name: string;
-}
+// interface CrewMember {
+//   id: number;
+//   job: string | string[];
+//   name: string;
+// }
 
-type FilteredCrewMember = Omit<CrewMember, "job"> & {
-  job: string[];
-  name: string;
-};
+// type FilteredCrewMember = Omit<CrewMember, "job"> & {
+//   job: string[];
+//   name: string;
+// };
 
 const TvDetails = () => {
   const params = useParams();

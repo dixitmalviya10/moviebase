@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import Heading from "rsuite/Heading";
-import Tabs from "rsuite/Tabs";
-import Panel from "rsuite/Panel";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { swiperConfig } from "../lib/swiperConfig";
-import { configs } from "../configs/constants";
-import axiosInstance from "../lib/axiosInstance";
-import Modal from "rsuite/Modal";
-import { CirclePlay } from "lucide-react";
+import { useEffect, useState } from 'react';
+import Heading from 'rsuite/Heading';
+import Tabs from 'rsuite/Tabs';
+import Panel from 'rsuite/Panel';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { swiperConfig } from '../lib/swiperConfig';
+import { configs } from '../configs/constants';
+import axiosInstance from '../lib/axiosInstance';
+import Modal from 'rsuite/Modal';
+import { CirclePlay } from 'lucide-react';
 
 interface MediaData {
   results: { id: string; key: string }[];
@@ -15,12 +15,18 @@ interface MediaData {
 interface ImageData {
   backdrops: { file_path: string }[];
 }
-const Media = ({ params, reloader }: any) => {
+const Media = ({
+  params,
+  reloader,
+}: {
+  params: { id: string };
+  reloader: boolean;
+}) => {
   const swiperConf = { ...swiperConfig, slidesPerView: 2.3 };
   const [open, setOpen] = useState<boolean>(false);
-  const [videoKey, setVideoKey] = useState<string>("");
+  const [videoKey, setVideoKey] = useState<string>('');
   // const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [activeKey, setActiveKey] = useState<string>("videos");
+  const [activeKey, setActiveKey] = useState<string>('videos');
   const [mediaData, setMediaData] = useState<MediaData>({
     results: [],
   });
@@ -29,20 +35,20 @@ const Media = ({ params, reloader }: any) => {
   });
 
   useEffect(() => {
-    const mediaID = params.id?.split("-")[0];
+    const mediaID = params.id?.split('-')[0];
     // setIsLoading(true);
     const handleTrendingData = async () => {
       try {
         const response = await axiosInstance.get(
-          `/movie/${mediaID}/${activeKey}`
+          `/movie/${mediaID}/${activeKey}`,
         );
-        if (activeKey === "videos") {
+        if (activeKey === 'videos') {
           setMediaData(response?.data);
         } else {
           setImageData(response?.data);
         }
       } catch (error) {
-        console.log("error", error);
+        console.log('error', error);
       }
       // finally {
       //   setIsLoading(false);
@@ -62,7 +68,8 @@ const Media = ({ params, reloader }: any) => {
       <Tabs
         defaultActiveKey="videos"
         appearance="pills"
-        onSelect={(value: any) => setActiveKey(value)}>
+        onSelect={(value: any) => setActiveKey(value)}
+      >
         <Tabs.Tab eventKey="videos" title="Videos">
           <Swiper {...swiperConf}>
             {mediaData.results.map((data) => (
@@ -95,7 +102,7 @@ const Media = ({ params, reloader }: any) => {
               <SwiperSlide key={data.file_path}>
                 <Panel shaded bordered bodyFill>
                   <img
-                    src={configs["low-res-image-path"] + data.file_path}
+                    src={configs['low-res-image-path'] + data.file_path}
                     alt={data.file_path}
                     width="100%"
                     height={280}
@@ -111,7 +118,8 @@ const Media = ({ params, reloader }: any) => {
         backdrop={true}
         keyboard={false}
         open={open}
-        onClose={() => setOpen(false)}>
+        onClose={() => setOpen(false)}
+      >
         <Modal.Body style={{ margin: 0 }}>
           <iframe
             width="100%"
@@ -119,7 +127,8 @@ const Media = ({ params, reloader }: any) => {
             src={`https://www.youtube.com/embed/${videoKey}`}
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen></iframe>
+            allowFullScreen
+          ></iframe>
         </Modal.Body>
       </Modal>
     </>
