@@ -157,8 +157,16 @@ const LatestTrailers = () => {
         <Heading>Latest Trailers</Heading>
         <Tabs
           defaultActiveKey="movie/popular"
-          appearance="pills" // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onSelect={(value: any) => setActiveKey(value)}
+          appearance="pills"
+          onSelect={(eventKey: string | number | undefined) => {
+            if (typeof eventKey === 'string') {
+              setActiveKey(eventKey); // Use valid string
+            } else if (typeof eventKey === 'number') {
+              setActiveKey(eventKey.toString()); // Convert number to string
+            } else {
+              setActiveKey('movie/popular'); // Fallback for undefined
+            }
+          }}
         >
           <Tabs.Tab eventKey="movie/popular" title="Popular">
             <Swiper {...swiperConfig}>
