@@ -159,7 +159,7 @@ const LatestTrailers = () => {
           defaultActiveKey="movie/popular"
           appearance="pills"
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onSelect={(eventKey: any) => setActiveKey(eventKey)}
+          onSelect={(value: any) => setActiveKey(value)}
         >
           <Tabs.Tab eventKey="movie/popular" title="Popular">
             <Swiper {...swiperConfig}>
