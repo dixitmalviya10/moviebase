@@ -158,9 +158,9 @@ const LatestTrailers = () => {
         <Tabs
           defaultActiveKey="movie/popular"
           appearance="pills"
-          onSelect={(eventKey: string | number | undefined) =>
-            setActiveKey(eventKey as string)
-          }
+          onSelect={(eventKey: string | number | undefined) => {
+            setActiveKey(eventKey as string);
+          }}
         >
           <Tabs.Tab eventKey="movie/popular" title="Popular">
             <Swiper {...swiperConfig}>
