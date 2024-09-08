@@ -51,7 +51,7 @@ const Recommendations = ({
       }
     };
     handleTrendingData();
-  }, [reloader]);
+  }, [reloader, params.id]);
 
   console.log('isLoading==', isLoading, 'reLoader', reloader);
   return (

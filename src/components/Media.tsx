@@ -55,7 +55,7 @@ const Media = ({
       // }
     };
     handleTrendingData();
-  }, [activeKey, reloader]);
+  }, [activeKey, reloader, params.id]);
 
   const handleOpen = (data: { key: string }) => {
     setVideoKey(data.key);
@@ -68,6 +68,7 @@ const Media = ({
       <Tabs
         defaultActiveKey="videos"
         appearance="pills"
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onSelect={(value: any) => setActiveKey(value)}
       >
         <Tabs.Tab eventKey="videos" title="Videos">

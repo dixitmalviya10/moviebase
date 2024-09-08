@@ -37,7 +37,7 @@ import intlNumberFormatter from '../../../utils/intlNumberFormatter';
 
 // import ImageBackgroundDetector from "../../components/ImageBackgroundDetector";
 
-type Params = { id: string };
+// type Params = { id: string };
 
 interface MovieDataInterface {
   id: number;
@@ -166,7 +166,7 @@ const MovieDetails = () => {
     useState<MovieDataInterface>(initialMovieData);
   const [reloader, setReloader] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const params: Params = useParams();
+  const params = useParams() as { id: string };
   const [trailerUrl, setTrailerUrl] = useState<TrailerObjInterface>({
     title: '',
     url: '',
@@ -210,7 +210,7 @@ const MovieDetails = () => {
       }
     };
     handleTrendingData();
-  }, [reloader]);
+  }, [reloader, params.id]);
 
   const crewData: FilteredCrewMember[] = movieData?.credits?.crew
     ?.filter(

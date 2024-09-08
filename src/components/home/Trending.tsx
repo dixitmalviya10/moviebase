@@ -1,17 +1,17 @@
-import Heading from "rsuite/Heading";
-import { useEffect, useState } from "react";
-import axiosInstance from "../../lib/axiosInstance";
-import Tabs from "rsuite/Tabs";
-import "swiper/css";
-import "swiper/css/free-mode";
-import "swiper/css/scrollbar";
-import { Swiper, SwiperSlide } from "swiper/react";
-import Panel from "rsuite/Panel";
-import Placeholder from "rsuite/Placeholder";
-import config from "../../configs/configs.json";
-import { swiperConfig } from "../../lib/swiperConfig";
-import { Link } from "react-router-dom";
-import { formatDate } from "../../lib/formatDate";
+import Heading from 'rsuite/Heading';
+import { useEffect, useState } from 'react';
+import axiosInstance from '../../lib/axiosInstance';
+import Tabs from 'rsuite/Tabs';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import 'swiper/css/scrollbar';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import Panel from 'rsuite/Panel';
+import Placeholder from 'rsuite/Placeholder';
+import config from '../../configs/configs.json';
+import { swiperConfig } from '../../lib/swiperConfig';
+import { Link } from 'react-router-dom';
+import { formatDate } from '../../lib/formatDate';
 
 interface TrendingDataArray {
   readonly id: number;
@@ -30,7 +30,7 @@ interface TrendingData {
 const Trending = () => {
   const swiperConf = { ...swiperConfig, slidesPerView: 7.5 };
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [activeKey, setActiveKey] = useState<string>("day");
+  const [activeKey, setActiveKey] = useState<string>('day');
   const [trendingData, setTrendingData] = useState<TrendingData>({
     results: [],
   });
@@ -42,7 +42,7 @@ const Trending = () => {
         const response = await axiosInstance.get(`/trending/all/${activeKey}`);
         setTrendingData(response?.data);
       } catch (error) {
-        console.log("error", error);
+        console.log('error', error);
       } finally {
         setIsLoading(false);
       }
@@ -56,7 +56,9 @@ const Trending = () => {
       <Tabs
         defaultActiveKey="day"
         appearance="pills"
-        onSelect={(value: any) => setActiveKey(value)}>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onSelect={(value: any) => setActiveKey(value)}
+      >
         <Tabs.Tab eventKey="day" title="Today">
           <Swiper {...swiperConf}>
             {isLoading ? (
@@ -66,26 +68,26 @@ const Trending = () => {
                 const path = data?.title
                   ? `/movie/${data?.id}-${data?.title
                       ?.toLowerCase()
-                      .replace(/\s+/g, "-")}`
+                      .replace(/\s+/g, '-')}`
                   : data?.name
-                  ? `/tv/${data?.id}-${data?.name
-                      ?.toLowerCase()
-                      .replace(/\s+/g, "-")}`
-                  : "/";
+                    ? `/tv/${data?.id}-${data?.name
+                        ?.toLowerCase()
+                        .replace(/\s+/g, '-')}`
+                    : '/';
                 return (
                   <SwiperSlide key={data?.id}>
                     <Link to={path}>
                       <Panel shaded bordered bodyFill>
                         <img
-                          src={config["low-res-image-path"] + data?.poster_path}
+                          src={config['low-res-image-path'] + data?.poster_path}
                           width="100%"
                           height={250}
                         />
-                        <Panel header={data?.title || data?.name || "N.A"}>
+                        <Panel header={data?.title || data?.name || 'N.A'}>
                           <div>
                             {formatDate(
-                              data?.release_date || data?.first_air_date
-                            ) || "N.A"}
+                              data?.release_date || data?.first_air_date,
+                            ) || 'N.A'}
                           </div>
                         </Panel>
                       </Panel>
@@ -105,26 +107,26 @@ const Trending = () => {
                 const path = data?.title
                   ? `/movie/${data?.id}-${data?.title
                       ?.toLowerCase()
-                      .replace(/\s+/g, "-")}`
+                      .replace(/\s+/g, '-')}`
                   : data?.name
-                  ? `/tv/${data?.id}-${data?.name
-                      ?.toLowerCase()
-                      .replace(/\s+/g, "-")}`
-                  : "/";
+                    ? `/tv/${data?.id}-${data?.name
+                        ?.toLowerCase()
+                        .replace(/\s+/g, '-')}`
+                    : '/';
                 return (
                   <SwiperSlide key={data?.id}>
                     <Link to={path}>
                       <Panel shaded bordered bodyFill>
                         <img
-                          src={config["low-res-image-path"] + data?.poster_path}
+                          src={config['low-res-image-path'] + data?.poster_path}
                           width="100%"
                           height={250}
                         />
-                        <Panel header={data?.title || data?.name || "N.A"}>
+                        <Panel header={data?.title || data?.name || 'N.A'}>
                           <div>
                             {formatDate(
-                              data?.release_date || data?.first_air_date
-                            ) || "N.A"}
+                              data?.release_date || data?.first_air_date,
+                            ) || 'N.A'}
                           </div>
                         </Panel>
                       </Panel>
