@@ -159,7 +159,13 @@ const LatestTrailers = () => {
           defaultActiveKey="movie/popular"
           appearance="pills"
           onSelect={(eventKey: string | number | undefined) => {
-            setActiveKey(eventKey as string);
+            if (typeof eventKey === 'string') {
+              setActiveKey(eventKey); // Valid string
+            } else if (typeof eventKey === 'number') {
+              setActiveKey(eventKey.toString()); // Convert number to string
+            } else {
+              setActiveKey(''); // Handle undefined case, if necessary
+            }
           }}
         >
           <Tabs.Tab eventKey="movie/popular" title="Popular">
