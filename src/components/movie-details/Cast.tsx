@@ -32,7 +32,7 @@ const Cast: React.FC<SeriesCastProps> = ({ castData }) => {
         {!castData ? (
           <Placeholder.Graph active />
         ) : (
-          castData.slice(0, 9)?.map((data) => {
+          castData?.map((data) => {
             return (
               <SwiperSlide key={data?.id}>
                 <Link to="/">
@@ -45,9 +45,10 @@ const Cast: React.FC<SeriesCastProps> = ({ castData }) => {
                       }
                       width="100%"
                       height={200}
+                      loading="lazy"
                     />
-                    <Panel header={data?.original_name || 'N.A'}>
-                      <div>{data?.character || 'N.A'}</div>
+                    <Panel header={data?.original_name || 'Not Available'}>
+                      <div>{data?.character || 'Not Available'}</div>
                     </Panel>
                   </Panel>
                 </Link>

@@ -79,6 +79,7 @@ const Media = ({
                         alt="thumbnail"
                         width="100%"
                         height={280}
+                        loading="lazy"
                       />
                       <CirclePlay className="circleplay" size={80} />
                     </div>
@@ -86,34 +87,39 @@ const Media = ({
                 </SwiperSlide>
               ))
             ) : (
-              <img
-                src="/public/assets/images/no-video-available-image.webp"
-                width="100%"
-              />
+              <div className="media-not-available">
+                <Heading level={2}>Videos Not Available</Heading>
+              </div>
             )}
           </Swiper>
         </Tabs.Tab>
         <Tabs.Tab eventKey="images" title="Images">
           <Swiper {...swiperConf}>
-            {imageData.backdrops.map((data) => (
-              <SwiperSlide key={data.file_path}>
-                <Panel shaded bordered bodyFill>
-                  <img
-                    src={configs['low-res-image-path'] + data.file_path}
-                    alt={data.file_path}
-                    width="100%"
-                    height={280}
-                  />
-                </Panel>
-              </SwiperSlide>
-            ))}
+            {imageData.backdrops.length > 0 ? (
+              imageData.backdrops.map((data) => (
+                <SwiperSlide key={data.file_path}>
+                  <Panel shaded bordered bodyFill>
+                    <img
+                      src={configs['low-res-image-path'] + data.file_path}
+                      alt={data.file_path}
+                      width="100%"
+                      height={280}
+                      loading="lazy"
+                    />
+                  </Panel>
+                </SwiperSlide>
+              ))
+            ) : (
+              <div className="media-not-available">
+                <Heading level={2}>Images Not Available</Heading>
+              </div>
+            )}
           </Swiper>
         </Tabs.Tab>
       </Tabs>
       <Modal
         size="lg"
         backdrop={true}
-        keyboard={false}
         open={open}
         onClose={() => setOpen(false)}
       >

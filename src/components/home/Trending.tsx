@@ -79,15 +79,18 @@ const Trending = () => {
                     <Link to={path}>
                       <Panel shaded bordered bodyFill>
                         <img
+                          loading="lazy"
                           src={config['low-res-image-path'] + data?.poster_path}
                           width="100%"
                           height={250}
                         />
-                        <Panel header={data?.title || data?.name || 'N.A'}>
+                        <Panel
+                          header={data?.title || data?.name || 'Not Available'}
+                        >
                           <div>
                             {formatDate(
                               data?.release_date || data?.first_air_date,
-                            ) || 'N.A'}
+                            ) || 'Not Available'}
                           </div>
                         </Panel>
                       </Panel>
@@ -118,15 +121,18 @@ const Trending = () => {
                     <Link to={path}>
                       <Panel shaded bordered bodyFill>
                         <img
+                          loading="lazy"
                           src={config['low-res-image-path'] + data?.poster_path}
                           width="100%"
                           height={250}
                         />
-                        <Panel header={data?.title || data?.name || 'N.A'}>
+                        <Panel
+                          header={data?.title || data?.name || 'Not Available'}
+                        >
                           <div>
                             {formatDate(
                               data?.release_date || data?.first_air_date,
-                            ) || 'N.A'}
+                            ) || 'Not Available'}
                           </div>
                         </Panel>
                       </Panel>

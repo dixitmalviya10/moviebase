@@ -40,6 +40,7 @@ const SeriesCast: React.FC<SeriesCastProps> = ({ castData }) => {
                   <Link to="/">
                     <Panel shaded bordered bodyFill>
                       <img
+                        loading="lazy"
                         src={
                           data?.profile_path
                             ? config['low-res-image-path'] + data?.profile_path
@@ -48,8 +49,8 @@ const SeriesCast: React.FC<SeriesCastProps> = ({ castData }) => {
                         width="100%"
                         height={200}
                       />
-                      <Panel header={data?.original_name || 'N.A'}>
-                        <div>{data?.character || 'N.A'}</div>
+                      <Panel header={data?.original_name || 'Not Available'}>
+                        <div>{data?.character || 'Not Available'}</div>
                       </Panel>
                     </Panel>
                   </Link>

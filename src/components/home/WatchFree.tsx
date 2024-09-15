@@ -80,12 +80,15 @@ const WatchFree = () => {
                     <Link to={path}>
                       <Panel shaded bordered bodyFill>
                         <img
+                          loading="lazy"
                           src={config['low-res-image-path'] + data?.poster_path}
                           width="100%"
                           height={250}
                         />
-                        <Panel header={data?.title || 'N.A'}>
-                          <div>{formatDate(data?.release_date) || 'N.A'}</div>
+                        <Panel header={data?.title || 'Not Available'}>
+                          <div>
+                            {formatDate(data?.release_date) || 'Not Available'}
+                          </div>
                         </Panel>
                       </Panel>
                     </Link>
@@ -115,15 +118,18 @@ const WatchFree = () => {
                     <Link to={path}>
                       <Panel shaded bordered bodyFill>
                         <img
+                          loading="lazy"
                           src={config['low-res-image-path'] + data?.poster_path}
                           width="100%"
                           height={250}
                         />
-                        <Panel header={data?.title || data?.name || 'N.A'}>
+                        <Panel
+                          header={data?.title || data?.name || 'Not Available'}
+                        >
                           <div>
                             {formatDate(
                               data?.release_date || data?.first_air_date,
-                            ) || 'N.A'}
+                            ) || 'Not Available'}
                           </div>
                         </Panel>
                       </Panel>

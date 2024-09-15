@@ -77,6 +77,7 @@ const SeriesMedia = ({
                         alt="thumbnail"
                         width="100%"
                         height={280}
+                        loading="lazy"
                       />
                       <CirclePlay className="circleplay" size={80} />
                     </div>
@@ -102,6 +103,7 @@ const SeriesMedia = ({
                       alt={data.file_path}
                       width="100%"
                       height={280}
+                      loading="lazy"
                     />
                   </Panel>
                 </SwiperSlide>
@@ -117,7 +119,6 @@ const SeriesMedia = ({
       <Modal
         size="lg"
         backdrop={true}
-        keyboard={false}
         open={open}
         onClose={() => setOpen(false)}
       >

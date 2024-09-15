@@ -78,6 +78,7 @@ const Recommendations = ({
                 <Link to={path} onClick={() => handleReloader(!reloader)}>
                   <Panel shaded bordered bodyFill>
                     <img
+                      loading="lazy"
                       src={
                         data.backdrop_path
                           ? configs['low-res-image-path'] + data.backdrop_path
@@ -88,7 +89,9 @@ const Recommendations = ({
                       height={150}
                     />
                     <Panel>
-                      <div className="margin-bottom-sm">{data.title}</div>
+                      <div className="margin-bottom-sm">
+                        {data.title || 'Not Available'}
+                      </div>
 
                       <Tag
                         title="Ratings"

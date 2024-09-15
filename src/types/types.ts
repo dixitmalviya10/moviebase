@@ -18,6 +18,69 @@ export interface Reviews {
   }[];
 }
 
+export interface MovieDataInterface {
+  id: number;
+  title: string;
+  backdrop_path: string;
+  budget: number;
+  poster_path: string;
+  release_date: string;
+  release_dates: {
+    iso_3166_1: string;
+    release_dates: {
+      certification: string;
+      iso_639_1: string;
+      release_date: string;
+    }[];
+  };
+  genres: { id: number; name: string }[];
+  runtime: number;
+  vote_average: number;
+  tagline: string;
+  overview: string;
+  credits: {
+    cast: {
+      id: number;
+      name: string;
+      character: string;
+      profile_path: string;
+      original_name: string;
+    }[];
+    crew: { id: number; name: string; job: string; department: string }[];
+  };
+  'watch/providers'?: {
+    results: {
+      IN: {
+        flatrate: {
+          provider_id: number;
+          name: string;
+          logo_path: string;
+        }[];
+        link: string;
+      };
+    };
+  };
+  reviews: {
+    results: {
+      id: string;
+      author_details: { avatar_path: string; name: string; rating: number };
+      content: string;
+      created_at: string;
+    }[];
+  };
+  external_ids: {
+    facebook_id: string;
+    imdb_id: string;
+    instagram_id: string;
+    twitter_id: string;
+  };
+  homepage: string;
+  status: string;
+  original_language: string;
+  revenue: number;
+  keywords: { keywords: { name: string; id: number | null }[] };
+}
+
 export interface TVDataInterface {
   id: number;
   name: string;
@@ -40,7 +103,7 @@ export interface TVDataInterface {
   'watch/providers': {
     results: {
       IN: {
-        flatrate: { id: number; name: string; logo_path: string }[];
+        flatrate: { provider_id: number; name: string; logo_path: string }[];
         link: string;
       };
     };

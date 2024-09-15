@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../../lib/axiosInstance';
 import Heading from 'rsuite/Heading';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Text from 'rsuite/Text';
 import Modal from 'rsuite/Modal';
 import Stack from 'rsuite/Stack';
@@ -11,7 +11,7 @@ import config from '../../../configs/configs.json';
 import Tooltip from 'rsuite/Tooltip';
 import Whisper from 'rsuite/Whisper';
 import Progress from 'rsuite/Progress';
-import Placeholder from 'rsuite/Placeholder';
+// import Placeholder from 'rsuite/Placeholder';
 import Panel from 'rsuite/Panel';
 import {
   Facebook,
@@ -33,69 +33,11 @@ import Review from '../../../components/movie-details/Review';
 import Media from '../../../components/movie-details/Media';
 import Recommendations from '../../../components/movie-details/Recommendations';
 import intlNumberFormatter from '../../../utils/intlNumberFormatter';
+import { MovieDataInterface } from '../../../types/types';
 
 // import ImageBackgroundDetector from "../../components/ImageBackgroundDetector";
 
 // type Params = { id: string };
-
-interface MovieDataInterface {
-  id: number;
-  title: string;
-  backdrop_path: string;
-  budget: number;
-  poster_path: string;
-  release_date: string;
-  release_dates: {
-    iso_3166_1: string;
-    release_dates: {
-      certification: string;
-      iso_639_1: string;
-      release_date: string;
-    }[];
-  };
-  genres: { id: number; name: string }[];
-  runtime: number;
-  vote_average: number;
-  tagline: string;
-  overview: string;
-  credits: {
-    cast: {
-      id: number;
-      name: string;
-      character: string;
-      profile_path: string;
-      original_name: string;
-    }[];
-    crew: { id: number; name: string; job: string; department: string }[];
-  };
-  'watch/providers'?: {
-    results: {
-      IN: {
-        flatrate: { id: number; name: string; logo_path: string }[];
-        link: string;
-      };
-    };
-  };
-  reviews: {
-    results: {
-      id: string;
-      author_details: { avatar_path: string; name: string; rating: number };
-      content: string;
-      created_at: string;
-    }[];
-  };
-  external_ids: {
-    facebook_id: string;
-    imdb_id: string;
-    instagram_id: string;
-    twitter_id: string;
-  };
-  homepage: string;
-  status: string;
-  original_language: string;
-  revenue: number;
-  keywords: { keywords: { name: string; id: number | null }[] };
-}
 
 interface CrewMember {
   id: number;
@@ -134,7 +76,7 @@ const MovieDetails = () => {
     'watch/providers': {
       results: {
         IN: {
-          flatrate: [{ id: 0, name: '', logo_path: '' }],
+          flatrate: [{ provider_id: 0, name: '', logo_path: '' }],
           link: '',
         },
       },
@@ -173,6 +115,7 @@ const MovieDetails = () => {
   });
 
   const userScore = Math.round((movieData.vote_average * 100) / 10);
+
   useEffect(() => {
     const movieID = params.id?.split('-')[0];
     const handleTrendingData = async () => {
@@ -225,7 +168,6 @@ const MovieDetails = () => {
     )
     .reduce((acc: FilteredCrewMember[], current: CrewMember) => {
       const existing = acc.find((item) => item.id === current.id);
-
       if (existing) {
         existing.job = Array.isArray(existing.job)
           ? existing.job
@@ -270,13 +212,19 @@ const MovieDetails = () => {
             style={{ display: 'inline-block', width: 250 }}
           >
             <img
+              loading="lazy"
               src={config['med-res-image-path'] + movieData.poster_path}
               width={'100%'}
             />
+            {/* {console.log(
+              "movieData?.['watch/providers']?.results?.IN?.flatrate==",
+              movieData?.['watch/providers']?.results?.IN?.flatrate,
+            )} */}
             {movieData?.['watch/providers']?.results?.IN?.flatrate?.map(
               (data) => (
-                <div className="flex-center" key={data.id}>
+                <div className="flex-center" key={data?.provider_id}>
                   <img
+                    loading="lazy"
                     src={config['med-res-image-path'] + data.logo_path}
                     width={40}
                     style={{ margin: 5, borderRadius: 3 }}
@@ -287,15 +235,16 @@ const MovieDetails = () => {
                       Now Streaming
                     </Text>
                     <Text weight="bold" style={{ color: 'white' }}>
-                      <Link
-                        to={
+                      <a
+                        href={
                           movieData?.['watch/providers']?.results?.IN?.link ||
                           '/'
                         }
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         Watch Now
-                      </Link>
+                      </a>
                     </Text>
                   </div>
                 </div>
@@ -334,9 +283,18 @@ const MovieDetails = () => {
                 <Text style={{ display: 'inline-block', color: 'white' }}>
                   •
                 </Text>
-                <Text style={{ display: 'inline-block', color: 'white' }}>
+                {/* <Text style={{ display: 'inline-block', color: 'white' }}>
                   {movieData?.genres.map((genre) => genre.name).join(', ')}
+                </Text> */}
+                <Text style={{ display: 'inline-block', color: 'white' }}>
+                  {movieData?.genres.map((genre, index) => (
+                    <span key={genre.id || index}>
+                      {genre.name}
+                      {index < movieData.genres.length - 1 ? ', ' : ''}
+                    </span>
+                  ))}
                 </Text>
+
                 <Text style={{ display: 'inline-block', color: 'white' }}>
                   •
                 </Text>
@@ -420,30 +378,28 @@ const MovieDetails = () => {
         <Row gutter={40}>
           <Col xs={18}>
             <Cast castData={movieData.credits.cast} params={params} />
-            <Divider />
             {movieData?.reviews.results.length > 0 && (
               <>
-                <Review reviews={movieData.reviews} />
                 <Divider />
+                <Review reviews={movieData.reviews} />
               </>
             )}
 
             <>
-              <Media
-                params={params}
-                reloader={reloader}
-                // handleReloader={handleReloader}
-              />
               <Divider />
+              <Media params={params} reloader={reloader} />
             </>
 
             {hasLength && (
-              <Recommendations
-                params={params}
-                reloader={reloader}
-                handleReloader={handleReloader}
-                handleHasLength={handleHasLength}
-              />
+              <>
+                <Divider />
+                <Recommendations
+                  params={params}
+                  reloader={reloader}
+                  handleReloader={handleReloader}
+                  handleHasLength={handleHasLength}
+                />
+              </>
             )}
           </Col>
 
@@ -471,13 +427,13 @@ const MovieDetails = () => {
                               </Tooltip>
                             }
                           >
-                            <Link
+                            <a
                               target="_blank"
                               rel="noopener noreferrer"
-                              to={`https://www.facebook.com/${movieData.external_ids.facebook_id}`}
+                              href={`https://www.facebook.com/${movieData.external_ids.facebook_id}`}
                             >
                               <Facebook size={30} />
-                            </Link>
+                            </a>
                           </Whisper>
                         )}
                         {movieData.external_ids.twitter_id && (
@@ -491,13 +447,13 @@ const MovieDetails = () => {
                               </Tooltip>
                             }
                           >
-                            <Link
+                            <a
                               target="_blank"
                               rel="noopener noreferrer"
-                              to={`https://www.twitter.com/${movieData.external_ids.twitter_id}`}
+                              href={`https://www.twitter.com/${movieData.external_ids.twitter_id}`}
                             >
                               <Twitter size={30} />
-                            </Link>
+                            </a>
                           </Whisper>
                         )}
                         {movieData.external_ids.instagram_id && (
@@ -511,13 +467,13 @@ const MovieDetails = () => {
                               </Tooltip>
                             }
                           >
-                            <Link
+                            <a
                               target="_blank"
                               rel="noopener noreferrer"
-                              to={`https://www.instagram.com/${movieData.external_ids.instagram_id}`}
+                              href={`https://www.instagram.com/${movieData.external_ids.instagram_id}`}
                             >
                               <Instagram size={30} />
-                            </Link>
+                            </a>
                           </Whisper>
                         )}
                       </div>
@@ -535,13 +491,13 @@ const MovieDetails = () => {
                         </Tooltip>
                       }
                     >
-                      <Link
-                        to={movieData.homepage}
+                      <a
+                        href={movieData.homepage}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         <LucideLink size={30} />
-                      </Link>
+                      </a>
                     </Whisper>
                   )}
                 </div>
@@ -586,11 +542,15 @@ const MovieDetails = () => {
                 </Text>
                 <div>
                   {movieData?.keywords?.keywords.map((keyword) => (
-                    <Link key={keyword.id} to="/">
-                      <Button className="margin-keywords-xs" size="sm">
-                        {keyword.name}
-                      </Button>
-                    </Link>
+                    // <Link key={keyword.id} to="/">
+                    <Button
+                      key={keyword?.id}
+                      className="margin-keywords-xs"
+                      size="sm"
+                    >
+                      {keyword.name}
+                    </Button>
+                    // </Link>
                   ))}
                 </div>
               </div>
@@ -609,23 +569,14 @@ const MovieDetails = () => {
       <Modal
         size="lg"
         backdrop={true}
-        keyboard={false}
         open={open}
         onClose={() => setOpen(false)}
       >
         <Modal.Header>
-          <Modal.Title>
-            {!trailerUrl.title ? (
-              <Placeholder.Paragraph active rows={1} />
-            ) : (
-              trailerUrl.title
-            )}
-          </Modal.Title>
+          <Modal.Title>{trailerUrl.title || 'Not Available'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {trailerUrl.url === 'Not Available' ? (
-            <Heading>Not Available</Heading>
-          ) : (
+          {trailerUrl.url ? (
             <iframe
               width="100%"
               height={500}
@@ -634,6 +585,8 @@ const MovieDetails = () => {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
+          ) : (
+            <Heading>Not Available</Heading>
           )}
         </Modal.Body>
       </Modal>

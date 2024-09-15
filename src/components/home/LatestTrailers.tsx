@@ -178,6 +178,7 @@ const LatestTrailers = () => {
                       }
                     >
                       <img
+                        loading="lazy"
                         src={config['low-res-image-path'] + data?.backdrop_path}
                         width="100%"
                       />
@@ -205,6 +206,7 @@ const LatestTrailers = () => {
                       }
                     >
                       <img
+                        loading="lazy"
                         src={config['low-res-image-path'] + data?.backdrop_path}
                         width="100%"
                       />
@@ -233,6 +235,7 @@ const LatestTrailers = () => {
                       }
                     >
                       <img
+                        loading="lazy"
                         src={config['low-res-image-path'] + data?.backdrop_path}
                         width="100%"
                       />
@@ -245,13 +248,7 @@ const LatestTrailers = () => {
           </Tabs.Tab>
         </Tabs>
       </div>
-      <Modal
-        size="lg"
-        backdrop={true}
-        keyboard={false}
-        open={open}
-        onClose={handleClose}
-      >
+      <Modal size="lg" backdrop={true} open={open} onClose={handleClose}>
         <Modal.Header>
           <Modal.Title>
             {isLoading.video ? (

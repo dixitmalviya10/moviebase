@@ -23,6 +23,7 @@ const CurrentSeason: React.FC<{
             <Row style={{ display: 'flex', alignItems: 'center' }}>
               <Col xs={4} style={{ paddingLeft: 0 }}>
                 <img
+                  loading="lazy"
                   width={150}
                   src={
                     lastSeason?.poster_path

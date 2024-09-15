@@ -18,7 +18,6 @@ import {
   Grid,
   Message,
   Modal,
-  Placeholder,
   Row,
   Tooltip,
   Whisper,
@@ -64,7 +63,7 @@ const TvDetails = () => {
     'watch/providers': {
       results: {
         IN: {
-          flatrate: [{ id: 0, name: '', logo_path: '' }],
+          flatrate: [{ provider_id: 0, name: '', logo_path: '' }],
           link: '',
         },
       },
@@ -194,35 +193,35 @@ const TvDetails = () => {
             style={{ display: 'inline-block', width: 250 }}
           >
             <img
+              loading="lazy"
               src={config['med-res-image-path'] + tvData.poster_path}
               width={'100%'}
             />
-            {tvData?.['watch/providers']?.results?.IN?.flatrate?.map(
-              (data, index) => (
-                <div className="flex-center" key={index}>
-                  <img
-                    src={config['med-res-image-path'] + data.logo_path}
-                    width={40}
-                    style={{ margin: 5, borderRadius: 3 }}
-                    alt={data?.name}
-                  />
-                  <div>
-                    <Text weight="bold" style={{ color: 'lightgray' }}>
-                      Now Streaming
-                    </Text>
-                    <Text
-                      as={Link}
-                      to={tvData?.['watch/providers']?.results?.IN?.link}
-                      target="_blank"
-                      weight="bold"
-                      style={{ color: 'white' }}
-                    >
-                      Watch Now
-                    </Text>
-                  </div>
+            {tvData?.['watch/providers']?.results?.IN?.flatrate?.map((data) => (
+              <div className="flex-center" key={data?.provider_id}>
+                <img
+                  loading="lazy"
+                  src={config['med-res-image-path'] + data.logo_path}
+                  width={40}
+                  style={{ margin: 5, borderRadius: 3 }}
+                  alt={data?.name}
+                />
+                <div>
+                  <Text weight="bold" style={{ color: 'lightgray' }}>
+                    Now Streaming
+                  </Text>
+                  <Text
+                    as={Link}
+                    to={tvData?.['watch/providers']?.results?.IN?.link}
+                    target="_blank"
+                    weight="bold"
+                    style={{ color: 'white' }}
+                  >
+                    Watch Now
+                  </Text>
                 </div>
-              ),
-            )}
+              </div>
+            ))}
           </Panel>
           <VStack spacing={30} style={{ color: 'white' }}>
             <div>
@@ -388,13 +387,13 @@ const TvDetails = () => {
                               </Tooltip>
                             }
                           >
-                            <Link
+                            <a
                               target="_blank"
                               rel="noopener noreferrer"
-                              to={`https://www.facebook.com/${tvData.external_ids.facebook_id}`}
+                              href={`https://www.facebook.com/${tvData.external_ids.facebook_id}`}
                             >
                               <Facebook size={30} />
-                            </Link>
+                            </a>
                           </Whisper>
                         )}
                         {tvData.external_ids?.twitter_id && (
@@ -408,13 +407,13 @@ const TvDetails = () => {
                               </Tooltip>
                             }
                           >
-                            <Link
+                            <a
                               target="_blank"
                               rel="noopener noreferrer"
-                              to={`https://www.twitter.com/${tvData.external_ids?.twitter_id}`}
+                              href={`https://www.twitter.com/${tvData.external_ids?.twitter_id}`}
                             >
                               <Twitter size={30} />
-                            </Link>
+                            </a>
                           </Whisper>
                         )}
                         {tvData.external_ids?.instagram_id && (
@@ -428,13 +427,13 @@ const TvDetails = () => {
                               </Tooltip>
                             }
                           >
-                            <Link
+                            <a
                               target="_blank"
                               rel="noopener noreferrer"
-                              to={`https://www.instagram.com/${tvData.external_ids.instagram_id}`}
+                              href={`https://www.instagram.com/${tvData.external_ids.instagram_id}`}
                             >
                               <Instagram size={30} />
-                            </Link>
+                            </a>
                           </Whisper>
                         )}
                       </div>
@@ -452,13 +451,13 @@ const TvDetails = () => {
                         </Tooltip>
                       }
                     >
-                      <Link
-                        to={tvData?.homepage}
+                      <a
+                        href={tvData?.homepage}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         <LucideLink size={30} />
-                      </Link>
+                      </a>
                     </Whisper>
                   )}
                 </div>
@@ -476,6 +475,7 @@ const TvDetails = () => {
                   Network
                 </Text>
                 <img
+                  loading="lazy"
                   title={tvData?.networks[0]?.name}
                   src={
                     config['low-res-image-path'] +
@@ -507,11 +507,15 @@ const TvDetails = () => {
                 </Text>
                 <div>
                   {tvData?.keywords?.results.map((keyword) => (
-                    <Link key={keyword?.id} to="/">
-                      <Button className="margin-keywords-xs" size="sm">
-                        {keyword?.name}
-                      </Button>
-                    </Link>
+                    // <Link key={keyword?.id} to="/">
+                    <Button
+                      key={keyword?.id}
+                      className="margin-keywords-xs"
+                      size="sm"
+                    >
+                      {keyword?.name}
+                    </Button>
+                    // </Link>
                   ))}
                 </div>
               </div>
@@ -530,23 +534,14 @@ const TvDetails = () => {
       <Modal
         size="lg"
         backdrop={true}
-        keyboard={false}
         open={open}
         onClose={() => setOpen(false)}
       >
         <Modal.Header>
-          <Modal.Title>
-            {!trailerUrl.title ? (
-              <Placeholder.Paragraph active rows={1} />
-            ) : (
-              trailerUrl.title
-            )}
-          </Modal.Title>
+          <Modal.Title>{trailerUrl.title || 'Not Available'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {trailerUrl.url === 'Not Available' ? (
-            <Heading>Not Available</Heading>
-          ) : (
+          {trailerUrl.url ? (
             <iframe
               width="100%"
               height={500}
@@ -555,6 +550,8 @@ const TvDetails = () => {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
+          ) : (
+            <Heading>Not Available</Heading>
           )}
         </Modal.Body>
       </Modal>
