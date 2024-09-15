@@ -12,8 +12,12 @@ import { Pagination, Navigation, Mousewheel, Keyboard } from 'swiper/modules';
 import { Star } from 'lucide-react';
 import { Avatar, Panel, Tag, Text } from 'rsuite';
 import { formatDate } from '../../lib/formatDate';
+import React from 'react';
+import { Reviews } from '../../types/types';
 
-const SeriesReviews = ({ reviews }) => {
+const SeriesReviews: React.FC<{ reviewDetails: Reviews }> = ({
+  reviewDetails,
+}) => {
   return (
     <>
       <Heading>Reviews</Heading>
@@ -31,7 +35,7 @@ const SeriesReviews = ({ reviews }) => {
         modules={[Pagination, Navigation, Mousewheel, Keyboard]}
         className="mySwiper"
       >
-        {reviews?.results.map((rev) => (
+        {reviewDetails?.results.map((rev) => (
           <SwiperSlide key={rev.id}>
             <Panel shaded bordered style={{ marginInline: '1px' }}>
               <div className="flex gap-md margin-bottom-md review-panel">

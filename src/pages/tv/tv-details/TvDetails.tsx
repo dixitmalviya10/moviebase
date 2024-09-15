@@ -345,7 +345,7 @@ const TvDetails = () => {
             {tvData?.reviews?.results.length > 0 && (
               <>
                 <Divider />
-                <SeriesReviews reviews={tvData?.reviews} />
+                <SeriesReviews reviewDetails={tvData?.reviews} />
               </>
             )}
 
