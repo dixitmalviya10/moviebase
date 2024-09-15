@@ -1,9 +1,9 @@
-import HStack from "rsuite/HStack";
-import VStack from "rsuite/VStack";
-import Text from "rsuite/Text";
-import FlexboxGrid from "rsuite/FlexboxGrid";
-import { Link } from "react-router-dom";
-import { Instagram, Linkedin } from "lucide-react";
+import HStack from 'rsuite/HStack';
+import VStack from 'rsuite/VStack';
+import Text from 'rsuite/Text';
+import FlexboxGrid from 'rsuite/FlexboxGrid';
+import { Link } from 'react-router-dom';
+import { Instagram, Linkedin } from 'lucide-react';
 
 const MFooter = () => {
   return (
@@ -64,20 +64,29 @@ const MFooter = () => {
 
           <VStack spacing={10}>
             <HStack spacing={15}>
-              <Link
+              <a
                 className="contact-icons"
                 title="Linkedin"
-                to="https://www.linkedin.com/in/dixit-lohar10/"
-                target="_blank">
+                href="https://www.linkedin.com/in/dixit-lohar10/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Linkedin size={30} />
-              </Link>
-              <Link className="contact-icons" title="Instagram" to="/">
+              </a>
+              <a
+                className="contact-icons"
+                title="Instagram"
+                href="https://www.instagram.com/dixitmalviya10/?hl=en"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Instagram size={30} />
-              </Link>
+              </a>
             </HStack>
             <Link
               className="contact-icons underline-text flex-center gap-sm"
-              to="mailto:dixitmalviya10@gmail.com">
+              to="mailto:dixitmalviya10@gmail.com"
+            >
               <Text className="text-white" size={15}>
                 dixitmalviya10@gmail.com
               </Text>

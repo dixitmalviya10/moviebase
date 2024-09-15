@@ -3,9 +3,9 @@ import Heading from 'rsuite/Heading';
 import Tabs from 'rsuite/Tabs';
 import Panel from 'rsuite/Panel';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { swiperConfig } from '../lib/swiperConfig';
-import { configs } from '../configs/constants';
-import axiosInstance from '../lib/axiosInstance';
+import { swiperConfig } from '../../lib/swiperConfig';
+import { configs } from '../../configs/constants';
+import axiosInstance from '../../lib/axiosInstance';
 import Modal from 'rsuite/Modal';
 import { CirclePlay } from 'lucide-react';
 
@@ -15,7 +15,8 @@ interface MediaData {
 interface ImageData {
   backdrops: { file_path: string }[];
 }
-const Media = ({
+
+const SeriesMedia = ({
   params,
   reloader,
 }: {
@@ -25,7 +26,6 @@ const Media = ({
   const swiperConf = { ...swiperConfig, slidesPerView: 2.3 };
   const [open, setOpen] = useState<boolean>(false);
   const [videoKey, setVideoKey] = useState<string>('');
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
   const [activeKey, setActiveKey] = useState<string>('videos');
   const [mediaData, setMediaData] = useState<MediaData>({
     results: [],
@@ -36,12 +36,9 @@ const Media = ({
 
   useEffect(() => {
     const mediaID = params.id?.split('-')[0];
-    // setIsLoading(true);
     const handleTrendingData = async () => {
       try {
-        const response = await axiosInstance.get(
-          `/movie/${mediaID}/${activeKey}`,
-        );
+        const response = await axiosInstance.get(`/tv/${mediaID}/${activeKey}`);
         if (activeKey === 'videos') {
           setMediaData(response?.data);
         } else {
@@ -50,9 +47,6 @@ const Media = ({
       } catch (error) {
         console.log('error', error);
       }
-      // finally {
-      //   setIsLoading(false);
-      // }
     };
     handleTrendingData();
   }, [activeKey, reloader, params.id]);
@@ -73,44 +67,50 @@ const Media = ({
       >
         <Tabs.Tab eventKey="videos" title="Videos">
           <Swiper {...swiperConf}>
-            {mediaData.results.map((data) => (
-              <SwiperSlide key={data.id}>
-                <Panel shaded bordered bodyFill>
-                  {/* <iframe
-                    width="100%"
-                    height={280}
-                    src={`https://www.youtube.com/embed/${data.key}`}
-                    title="YouTube video player"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen></iframe> */}
-                  <div onClick={() => handleOpen(data)} className="thumbnail">
+            {mediaData.results.length > 0 ? (
+              mediaData.results.map((data) => (
+                <SwiperSlide key={data.id}>
+                  <Panel shaded bordered bodyFill>
+                    <div onClick={() => handleOpen(data)} className="thumbnail">
+                      <img
+                        src={`https://img.youtube.com/vi/${data.key}/hqdefault.jpg`}
+                        alt="thumbnail"
+                        width="100%"
+                        height={280}
+                      />
+                      <CirclePlay className="circleplay" size={80} />
+                    </div>
+                  </Panel>
+                </SwiperSlide>
+              ))
+            ) : (
+              <div className="media-not-available">
+                <Heading level={2}>Videos Not Available</Heading>
+              </div>
+            )}
+          </Swiper>
+        </Tabs.Tab>
+
+        <Tabs.Tab eventKey="images" title="Images">
+          <Swiper {...swiperConf}>
+            {imageData.backdrops.length > 0 ? (
+              imageData.backdrops.map((data) => (
+                <SwiperSlide key={data.file_path}>
+                  <Panel shaded bordered bodyFill>
                     <img
-                      src={`https://img.youtube.com/vi/${data.key}/hqdefault.jpg`}
-                      alt="thumbnail"
+                      src={configs['low-res-image-path'] + data.file_path}
+                      alt={data.file_path}
                       width="100%"
                       height={280}
                     />
-                    <CirclePlay className="circleplay" size={80} />
-                  </div>
-                </Panel>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </Tabs.Tab>
-        <Tabs.Tab eventKey="images" title="Images">
-          <Swiper {...swiperConf}>
-            {imageData.backdrops.map((data) => (
-              <SwiperSlide key={data.file_path}>
-                <Panel shaded bordered bodyFill>
-                  <img
-                    src={configs['low-res-image-path'] + data.file_path}
-                    alt={data.file_path}
-                    width="100%"
-                    height={280}
-                  />
-                </Panel>
-              </SwiperSlide>
-            ))}
+                  </Panel>
+                </SwiperSlide>
+              ))
+            ) : (
+              <div className="media-not-available">
+                <Heading level={2}>Images Not Available</Heading>
+              </div>
+            )}
           </Swiper>
         </Tabs.Tab>
       </Tabs>
@@ -136,4 +136,4 @@ const Media = ({
   );
 };
 
-export default Media;
+export default SeriesMedia;

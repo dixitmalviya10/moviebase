@@ -10,57 +10,41 @@ import config from '../../../configs/configs.json';
 // import { formatDate } from "../../lib/formatDate";
 import Progress from 'rsuite/Progress';
 import Panel from 'rsuite/Panel';
-import { Play } from 'lucide-react';
-import { Button } from 'rsuite';
+import { Facebook, Instagram, LucideLink, Play, Twitter } from 'lucide-react';
+import {
+  Button,
+  Col,
+  Divider,
+  Grid,
+  Message,
+  Modal,
+  Placeholder,
+  Row,
+  Tooltip,
+  Whisper,
+} from 'rsuite';
 import FlexboxGrid from 'rsuite/FlexboxGrid';
 import axiosInstance from '../../../lib/axiosInstance';
 import { formatDate } from '../../../lib/formatDate';
-
-interface MovieDataInterface {
-  id: number;
-  title: string;
-  backdrop_path: string;
-  budget: number;
-  poster_path: string;
-  release_date: string;
-  content_ratings: {
-    iso_3166_1: string;
-    rating: string;
-  };
-  genres: { id: number; name: string }[];
-  runtime: number;
-  vote_average: number;
-  tagline: string;
-  overview: string;
-  credits: { cast: []; crew: [] };
-  created_by: { id: number; name: string }[];
-  networks: { id: number; logo_path: string; name: string }[];
-  'watch/providers': {
-    results: {
-      IN: {
-        flatrate: { id: number; name: string; logo_path: string }[];
-        link: string;
-      };
-    };
-  };
-}
-
-// interface CrewMember {
-//   id: number;
-//   job: string | string[];
-//   name: string;
-// }
-
-// type FilteredCrewMember = Omit<CrewMember, "job"> & {
-//   job: string[];
-//   name: string;
-// };
+import SeriesCast from '../../../components/tv-details/SeriesCast';
+import CurrentSeason from '../../../components/tv-details/CurrentSeason';
+import SeriesReviews from '../../../components/tv-details/SeriesReviews';
+import SeriesMedia from '../../../components/tv-details/SeriesMedia';
+import Recommendations from '../../../components/movie-details/Recommendations';
+import { TrailerInfoInterface, TVDataInterface } from '../../../types/types';
 
 const TvDetails = () => {
-  const params = useParams();
-  const [tvData, setTvData] = useState<MovieDataInterface>({
-    id: 0,
+  const [reloader, setReloader] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const params = useParams() as { id: string };
+  const [hasLength, setHasLength] = useState<boolean>(false);
+  const [trailerUrl, setTrailerUrl] = useState<TrailerInfoInterface>({
     title: '',
+    url: '',
+  });
+  const [tvData, setTvData] = useState<TVDataInterface>({
+    id: 0,
+    name: '',
     backdrop_path: '',
     budget: 0,
     poster_path: '',
@@ -85,6 +69,54 @@ const TvDetails = () => {
         },
       },
     },
+    last_episode_to_air: {
+      air_date: '',
+      episode_number: 0,
+      episode_type: '',
+      id: 0,
+      name: '',
+      overview: '',
+      runtime: 0,
+      season_number: 0,
+      still_path: '',
+      vote_average: '',
+      vote_count: 0,
+    },
+    seasons: [
+      {
+        air_date: '',
+        episode_count: 0,
+        id: 0,
+        name: '',
+        overview: '',
+        poster_path: '',
+        season_number: 0,
+        vote_average: 0,
+      },
+    ],
+    number_of_seasons: 0,
+    reviews: {
+      results: [
+        {
+          id: '',
+          author_details: { avatar_path: '', name: '', rating: 0 },
+          content: '',
+          created_at: '',
+        },
+      ],
+    },
+    external_ids: {
+      facebook_id: '',
+      imdb_id: '',
+      instagram_id: '',
+      twitter_id: '',
+    },
+    homepage: '',
+    status: '',
+    original_language: '',
+    revenue: 0,
+    type: '',
+    keywords: { results: [{ name: '', id: null }] },
   });
 
   const userScore = Math.round((tvData.vote_average * 100) / 10);
@@ -94,7 +126,8 @@ const TvDetails = () => {
       try {
         const response = await axiosInstance.get(`/tv/${tvID}`, {
           params: {
-            append_to_response: 'content_ratings,credits,watch/providers',
+            append_to_response:
+              'content_ratings,credits,watch/providers,reviews,videos,external_ids,keywords',
           },
         });
         const filteredData = {
@@ -105,41 +138,35 @@ const TvDetails = () => {
           ),
         };
         setTvData(filteredData);
+        const trailers = response.data?.videos?.results.filter(
+          (video: { type: string; site: string }) =>
+            video.type === 'Trailer' && video.site === 'YouTube',
+        );
+        if (trailers.length > 0) {
+          setTrailerUrl((prev) => ({
+            ...prev,
+            title: response.data?.name,
+            url: `https://www.youtube.com/embed/${trailers[0].key}`,
+          }));
+        }
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
       } catch (error) {
         console.log('error', error);
       }
     };
     handleTrendingData();
-  }, [params.id]);
+  }, [params.id, reloader]);
 
-  //   const crewData: FilteredCrewMember[] = tvData?.credits?.crew
-  //     ?.filter(
-  //       (detail: CrewMember) =>
-  //         detail?.job === "Writer" ||
-  //         detail?.job === "Director" ||
-  //         detail?.job === "Story" ||
-  //         detail?.job === "Screenplay" ||
-  //         detail?.job === "Characters" ||
-  //         detail?.job === "Creator"
-  //     )
-  //     .reduce((acc: FilteredCrewMember[], current: CrewMember) => {
-  //       const existing = acc.find((item) => item.id === current.id);
+  const handleReloader = (value: boolean) => {
+    setReloader(value);
+  };
 
-  //       if (existing) {
-  //         existing.job = Array.isArray(existing.job)
-  //           ? existing.job
-  //           : [existing.job];
-  //         if (!existing.job.includes(current.job as string)) {
-  //           existing.job.push(current.job as string);
-  //         }
-  //       } else {
-  //         acc.push({ ...current, job: [current.job as string] });
-  //       }
-
-  //       return acc;
-  //     }, []);
-
-  console.log('first======', tvData);
+  const handleHasLength = (prop: boolean) => {
+    setHasLength(prop);
+  };
 
   return (
     <>
@@ -152,6 +179,7 @@ const TvDetails = () => {
           backgroundColor: 'rgba(0, 0, 0, 0.7)',
           backgroundBlendMode: 'overlay',
           padding: '3rem 2rem',
+          marginBottom: '1rem',
         }}
       >
         <Stack spacing={50} alignItems="flex-start">
@@ -169,35 +197,37 @@ const TvDetails = () => {
               src={config['med-res-image-path'] + tvData.poster_path}
               width={'100%'}
             />
-            {tvData?.['watch/providers']?.results?.IN?.flatrate?.map((data) => (
-              <div className="flex-center" key={data.id}>
-                <img
-                  src={config['med-res-image-path'] + data.logo_path}
-                  width={40}
-                  style={{ margin: 5, borderRadius: 3 }}
-                  alt={data?.name}
-                />
-                <div>
-                  <Text weight="bold" style={{ color: 'lightgray' }}>
-                    Now Streaming
-                  </Text>
-                  <Text
-                    as={Link}
-                    to={tvData?.['watch/providers']?.results?.IN?.link}
-                    target="_blank"
-                    weight="bold"
-                    style={{ color: 'white' }}
-                  >
-                    Watch Now
-                  </Text>
+            {tvData?.['watch/providers']?.results?.IN?.flatrate?.map(
+              (data, index) => (
+                <div className="flex-center" key={index}>
+                  <img
+                    src={config['med-res-image-path'] + data.logo_path}
+                    width={40}
+                    style={{ margin: 5, borderRadius: 3 }}
+                    alt={data?.name}
+                  />
+                  <div>
+                    <Text weight="bold" style={{ color: 'lightgray' }}>
+                      Now Streaming
+                    </Text>
+                    <Text
+                      as={Link}
+                      to={tvData?.['watch/providers']?.results?.IN?.link}
+                      target="_blank"
+                      weight="bold"
+                      style={{ color: 'white' }}
+                    >
+                      Watch Now
+                    </Text>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ),
+            )}
           </Panel>
           <VStack spacing={30} style={{ color: 'white' }}>
             <div>
               <Heading level={2}>
-                {tvData?.title}
+                {tvData?.name}
                 {tvData?.release_date
                   ? ` (${tvData?.release_date.split('-')[0]})`
                   : ''}
@@ -214,7 +244,7 @@ const TvDetails = () => {
                   weight="thin"
                   size="md"
                 >
-                  {tvData?.content_ratings.rating}{' '}
+                  {tvData?.content_ratings?.rating}{' '}
                 </Text>
                 <Text style={{ display: 'inline-block', color: 'white' }}>
                   {formatDate(tvData?.release_date)}{' '}
@@ -225,7 +255,7 @@ const TvDetails = () => {
                   •
                 </Text>
                 <Text style={{ display: 'inline-block', color: 'white' }}>
-                  {tvData?.genres.map((genre) => genre.name).join(', ')}
+                  {tvData?.genres.map((genre) => genre?.name).join(', ')}
                 </Text>
               </HStack>
             </div>
@@ -250,7 +280,12 @@ const TvDetails = () => {
                   User <br /> Score
                 </Heading>
               </div>
-              <Button size="xs" className="play-trailer-btn">
+              <Button
+                onClick={() => setOpen(true)}
+                size="xs"
+                active
+                className="play-trailer-btn"
+              >
                 <Play size={20} style={{ marginRight: 3 }} />
                 Play Trailer
               </Button>
@@ -296,6 +331,233 @@ const TvDetails = () => {
           </VStack>
         </Stack>
       </div>
+      <Grid fluid>
+        <Row gutter={40}>
+          <Col xs={18}>
+            <SeriesCast castData={tvData.credits.cast} params={params} />
+
+            <Divider />
+            <CurrentSeason
+              numberOfEpisodes={tvData?.number_of_seasons}
+              currentSeasonData={tvData?.seasons}
+            />
+
+            {tvData?.reviews?.results.length > 0 && (
+              <>
+                <Divider />
+                <SeriesReviews reviews={tvData?.reviews} />
+              </>
+            )}
+
+            <Divider />
+            <SeriesMedia params={params} reloader={reloader} />
+
+            {hasLength && (
+              <>
+                <Divider />
+                <Recommendations
+                  params={params}
+                  reloader={reloader}
+                  handleReloader={handleReloader}
+                  handleHasLength={handleHasLength}
+                />
+              </>
+            )}
+          </Col>
+          <Col xs={6}>
+            <VStack spacing={25}>
+              <Heading>&nbsp;</Heading>
+              {(tvData.external_ids?.facebook_id ||
+                tvData.external_ids?.twitter_id ||
+                tvData.external_ids?.instagram_id ||
+                tvData.homepage) && (
+                <div className="flex">
+                  {(tvData.external_ids?.facebook_id ||
+                    tvData.external_ids?.twitter_id ||
+                    tvData.external_ids?.instagram_id) && (
+                    <>
+                      <div className="flex gap-md">
+                        {tvData.external_ids?.facebook_id && (
+                          <Whisper
+                            placement="top"
+                            controlId="control-id-facebook"
+                            trigger="hover"
+                            speaker={
+                              <Tooltip>
+                                Visit <i>Facebook</i>
+                              </Tooltip>
+                            }
+                          >
+                            <Link
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              to={`https://www.facebook.com/${tvData.external_ids.facebook_id}`}
+                            >
+                              <Facebook size={30} />
+                            </Link>
+                          </Whisper>
+                        )}
+                        {tvData.external_ids?.twitter_id && (
+                          <Whisper
+                            placement="top"
+                            controlId="control-id-twitter"
+                            trigger="hover"
+                            speaker={
+                              <Tooltip>
+                                Visit <i>Twitter</i>
+                              </Tooltip>
+                            }
+                          >
+                            <Link
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              to={`https://www.twitter.com/${tvData.external_ids?.twitter_id}`}
+                            >
+                              <Twitter size={30} />
+                            </Link>
+                          </Whisper>
+                        )}
+                        {tvData.external_ids?.instagram_id && (
+                          <Whisper
+                            placement="top"
+                            controlId="control-id-instagram"
+                            trigger="hover"
+                            speaker={
+                              <Tooltip>
+                                Visit <i>Instagram</i>
+                              </Tooltip>
+                            }
+                          >
+                            <Link
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              to={`https://www.instagram.com/${tvData.external_ids.instagram_id}`}
+                            >
+                              <Instagram size={30} />
+                            </Link>
+                          </Whisper>
+                        )}
+                      </div>
+                      <Divider vertical />
+                    </>
+                  )}
+                  {tvData?.homepage && (
+                    <Whisper
+                      placement="top"
+                      controlId="control-id-homepage"
+                      trigger="hover"
+                      speaker={
+                        <Tooltip>
+                          Visit <i>Homepage</i>
+                        </Tooltip>
+                      }
+                    >
+                      <Link
+                        to={tvData?.homepage}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <LucideLink size={30} />
+                      </Link>
+                    </Whisper>
+                  )}
+                </div>
+              )}
+
+              <div>
+                <Text size={17} weight="semibold">
+                  Status
+                </Text>
+                <Text size={16}>{tvData?.status || 'Not Available'}</Text>
+              </div>
+
+              <div>
+                <Text size={17} weight="semibold">
+                  Network
+                </Text>
+                <img
+                  title={tvData?.networks[0]?.name}
+                  src={
+                    config['low-res-image-path'] +
+                    tvData?.networks[0]?.logo_path
+                  }
+                  alt={tvData?.networks[0]?.name}
+                  width={100}
+                />
+              </div>
+
+              <div>
+                <Text size={17} weight="semibold">
+                  Type
+                </Text>
+                <Text size={16}>{tvData?.type || 'Not Available'}</Text>
+              </div>
+              <div>
+                <Text size={17} weight="semibold">
+                  Original Language
+                </Text>
+                <Text size={16}>
+                  {tvData?.original_language || 'Not Available'}
+                </Text>
+              </div>
+
+              <div>
+                <Text size={17} weight="semibold">
+                  Keywords
+                </Text>
+                <div>
+                  {tvData?.keywords?.results.map((keyword) => (
+                    <Link key={keyword?.id} to="/">
+                      <Button className="margin-keywords-xs" size="sm">
+                        {keyword?.name}
+                      </Button>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <Message>
+                  <strong>
+                    Vote Average:{' '}
+                    {userScore ? userScore + '%' : 'Not Available'}
+                  </strong>
+                </Message>
+              </div>
+            </VStack>
+          </Col>
+        </Row>
+      </Grid>
+      <Modal
+        size="lg"
+        backdrop={true}
+        keyboard={false}
+        open={open}
+        onClose={() => setOpen(false)}
+      >
+        <Modal.Header>
+          <Modal.Title>
+            {!trailerUrl.title ? (
+              <Placeholder.Paragraph active rows={1} />
+            ) : (
+              trailerUrl.title
+            )}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {trailerUrl.url === 'Not Available' ? (
+            <Heading>Not Available</Heading>
+          ) : (
+            <iframe
+              width="100%"
+              height={500}
+              src={trailerUrl.url}
+              title="YouTube video player"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          )}
+        </Modal.Body>
+      </Modal>
     </>
   );
 };

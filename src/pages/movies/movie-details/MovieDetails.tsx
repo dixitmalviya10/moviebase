@@ -23,16 +23,15 @@ import {
 import { Button, Message } from 'rsuite';
 import Divider from 'rsuite/Divider';
 import FlexboxGrid from 'rsuite/FlexboxGrid';
-import Cast from '../../../components/Cast';
+import Cast from '../../../components/movie-details/Cast';
 import { formatDate } from '../../../lib/formatDate';
 import Grid from 'rsuite/Grid';
 import Row from 'rsuite/Row';
 import Col from 'rsuite/Col';
 import { formatRuntime } from '../../../lib/formatRuntime';
-import Review from '../../../components/Review';
-import { configs } from '../../../configs/constants';
-import Media from '../../../components/Media';
-import Recommendations from '../../../components/Recommendations';
+import Review from '../../../components/movie-details/Review';
+import Media from '../../../components/movie-details/Media';
+import Recommendations from '../../../components/movie-details/Recommendations';
 import intlNumberFormatter from '../../../utils/intlNumberFormatter';
 
 // import ImageBackgroundDetector from "../../components/ImageBackgroundDetector";
@@ -167,10 +166,12 @@ const MovieDetails = () => {
   const [reloader, setReloader] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const params = useParams() as { id: string };
+  const [hasLength, setHasLength] = useState<boolean>(false);
   const [trailerUrl, setTrailerUrl] = useState<TrailerObjInterface>({
     title: '',
     url: '',
   });
+
   const userScore = Math.round((movieData.vote_average * 100) / 10);
   useEffect(() => {
     const movieID = params.id?.split('-')[0];
@@ -243,7 +244,9 @@ const MovieDetails = () => {
     setReloader(value);
   };
 
-  console.log('mocviii', movieData);
+  const handleHasLength = (prop: boolean) => {
+    setHasLength(prop);
+  };
 
   return (
     <>
@@ -416,25 +419,32 @@ const MovieDetails = () => {
       <Grid fluid>
         <Row gutter={40}>
           <Col xs={18}>
-            <Cast
-              castData={movieData.credits.cast}
-              params={params}
-              type={configs.MOVIE}
-            />
+            <Cast castData={movieData.credits.cast} params={params} />
             <Divider />
-            <Review type={configs.MOVIE} reviews={movieData.reviews} />
-            <Divider />
-            <Media
-              params={params}
-              reloader={reloader}
-              // handleReloader={handleReloader}
-            />
-            <Divider />
-            <Recommendations
-              params={params}
-              reloader={reloader}
-              handleReloader={handleReloader}
-            />
+            {movieData?.reviews.results.length > 0 && (
+              <>
+                <Review reviews={movieData.reviews} />
+                <Divider />
+              </>
+            )}
+
+            <>
+              <Media
+                params={params}
+                reloader={reloader}
+                // handleReloader={handleReloader}
+              />
+              <Divider />
+            </>
+
+            {hasLength && (
+              <Recommendations
+                params={params}
+                reloader={reloader}
+                handleReloader={handleReloader}
+                handleHasLength={handleHasLength}
+              />
+            )}
           </Col>
 
           <Col xs={6}>
@@ -540,13 +550,15 @@ const MovieDetails = () => {
                 <Text size={17} weight="semibold">
                   Status
                 </Text>
-                <Text size={16}>{movieData?.status}</Text>
+                <Text size={16}>{movieData?.status || 'Not Available'}</Text>
               </div>
               <div>
                 <Text size={17} weight="semibold">
                   Original Language
                 </Text>
-                <Text size={16}>{movieData?.original_language}</Text>
+                <Text size={16}>
+                  {movieData?.original_language || 'Not Available'}
+                </Text>
               </div>
               <div>
                 <Text size={17} weight="semibold">

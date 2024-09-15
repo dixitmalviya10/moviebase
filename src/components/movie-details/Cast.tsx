@@ -5,11 +5,10 @@ import 'swiper/css/scrollbar';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Panel from 'rsuite/Panel';
 import Placeholder from 'rsuite/Placeholder';
-import config from '../configs/configs.json';
-import { swiperConfig } from '../lib/swiperConfig';
+import config from '../../configs/configs.json';
+import { swiperConfig } from '../../lib/swiperConfig';
 import { Link } from 'react-router-dom';
-import { Text } from 'rsuite';
-import { configs } from '../configs/constants';
+import { configs } from '../../configs/constants';
 
 interface CastMember {
   id: number;
@@ -21,20 +20,18 @@ interface CastMember {
 interface SeriesCastProps {
   castData: CastMember[];
   params: { id: string };
-  type: string;
 }
 
-const Cast: React.FC<SeriesCastProps> = ({ castData, params, type }) => {
+const Cast: React.FC<SeriesCastProps> = ({ castData }) => {
   const swiperConf = { ...swiperConfig, slidesPerView: 6.5 };
   return (
     <div>
-      <Heading>{type === 'MOVIE' ? 'Top Billed Cast' : 'Series Cast'}</Heading>
+      <Heading>Top Billed Cast</Heading>
 
       <Swiper {...swiperConf}>
         {!castData ? (
           <Placeholder.Graph active />
         ) : (
-          castData.length > 9 &&
           castData.slice(0, 9)?.map((data) => {
             return (
               <SwiperSlide key={data?.id}>
@@ -59,7 +56,7 @@ const Cast: React.FC<SeriesCastProps> = ({ castData, params, type }) => {
           })
         )}
       </Swiper>
-      <Text
+      {/* <Text
         style={{ textDecoration: 'underline' }}
         size={18}
         weight="semibold"
@@ -67,7 +64,7 @@ const Cast: React.FC<SeriesCastProps> = ({ castData, params, type }) => {
         to={`/movie/${params.id}/cast`}
       >
         Full Cast & Crew
-      </Text>
+      </Text> */}
     </div>
   );
 };

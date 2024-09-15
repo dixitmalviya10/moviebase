@@ -1,6 +1,6 @@
-import moment from "moment";
+import moment from 'moment';
 
-export const formatDate = (date: string) => {
-  const fDate = moment(date).format("ll");
+export const formatDate = (date?: string) => {
+  const fDate = moment(date).format('ll');
   return fDate;
 };
