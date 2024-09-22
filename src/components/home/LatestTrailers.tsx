@@ -164,7 +164,7 @@ const LatestTrailers = () => {
           <Tabs.Tab eventKey="movie/popular" title="Popular">
             <Swiper {...swiperConfig}>
               {isLoading.videos ? (
-                <Placeholder.Graph active />
+                <Placeholder.Graph active height={163} />
               ) : (
                 trailerData?.results.map((data) => (
                   <SwiperSlide key={data?.id} onClick={() => handleOpen(data)}>
@@ -192,7 +192,7 @@ const LatestTrailers = () => {
           <Tabs.Tab eventKey="movie/now_playing" title="Streaming">
             <Swiper {...swiperConfig}>
               {isLoading.videos ? (
-                <Placeholder.Graph active />
+                <Placeholder.Graph active height={163} />
               ) : (
                 trailerData?.results.map((data) => (
                   <SwiperSlide key={data?.id} onClick={() => handleOpen(data)}>
@@ -221,7 +221,7 @@ const LatestTrailers = () => {
           <Tabs.Tab eventKey="tv/on_the_air" title="On TV">
             <Swiper {...swiperConfig}>
               {isLoading.videos ? (
-                <Placeholder.Graph active />
+                <Placeholder.Graph active height={163} />
               ) : (
                 trailerData?.results.map((data) => (
                   <SwiperSlide key={data?.id} onClick={() => handleOpen(data)}>

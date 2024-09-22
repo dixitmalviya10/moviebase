@@ -36,7 +36,6 @@ const TvDetails = () => {
   const [reloader, setReloader] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const params = useParams() as { id: string };
-  const [hasLength, setHasLength] = useState<boolean>(false);
   const [trailerUrl, setTrailerUrl] = useState<TrailerInfoInterface>({
     title: '',
     url: '',
@@ -161,10 +160,6 @@ const TvDetails = () => {
 
   const handleReloader = (value: boolean) => {
     setReloader(value);
-  };
-
-  const handleHasLength = (prop: boolean) => {
-    setHasLength(prop);
   };
 
   return (
@@ -351,17 +346,11 @@ const TvDetails = () => {
             <Divider />
             <SeriesMedia params={params} reloader={reloader} />
 
-            {hasLength && (
-              <>
-                <Divider />
-                <Recommendations
-                  params={params}
-                  reloader={reloader}
-                  handleReloader={handleReloader}
-                  handleHasLength={handleHasLength}
-                />
-              </>
-            )}
+            <Recommendations
+              params={params}
+              reloader={reloader}
+              handleReloader={handleReloader}
+            />
           </Col>
           <Col xs={6}>
             <VStack spacing={25}>

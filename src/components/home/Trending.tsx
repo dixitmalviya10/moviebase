@@ -12,20 +12,7 @@ import config from '../../configs/configs.json';
 import { swiperConfig } from '../../lib/swiperConfig';
 import { Link } from 'react-router-dom';
 import { formatDate } from '../../lib/formatDate';
-
-interface TrendingDataArray {
-  readonly id: number;
-  name: string;
-  title: string;
-  original_title: string;
-  release_date: string;
-  poster_path: string;
-  first_air_date: string;
-}
-
-interface TrendingData {
-  results: TrendingDataArray[];
-}
+import { TrendingData } from '../../types/types';
 
 const Trending = () => {
   const swiperConf = { ...swiperConfig, slidesPerView: 7.5 };
@@ -36,8 +23,8 @@ const Trending = () => {
   });
 
   useEffect(() => {
-    setIsLoading(true);
     const handleTrendingData = async () => {
+      setIsLoading(true);
       try {
         const response = await axiosInstance.get(`/trending/all/${activeKey}`);
         setTrendingData(response?.data);
@@ -62,7 +49,7 @@ const Trending = () => {
         <Tabs.Tab eventKey="day" title="Today">
           <Swiper {...swiperConf}>
             {isLoading ? (
-              <Placeholder.Graph active />
+              <Placeholder.Graph active height={388} />
             ) : (
               trendingData?.results.map((data) => {
                 const path = data?.title
@@ -104,7 +91,7 @@ const Trending = () => {
         <Tabs.Tab eventKey="week" title="This Week">
           <Swiper {...swiperConf}>
             {isLoading ? (
-              <Placeholder.Graph active />
+              <Placeholder.Graph active height={388} />
             ) : (
               trendingData?.results.map((data) => {
                 const path = data?.title

@@ -108,7 +108,6 @@ const MovieDetails = () => {
   const [reloader, setReloader] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const params = useParams() as { id: string };
-  const [hasLength, setHasLength] = useState<boolean>(false);
   const [trailerUrl, setTrailerUrl] = useState<TrailerObjInterface>({
     title: '',
     url: '',
@@ -184,10 +183,6 @@ const MovieDetails = () => {
 
   const handleReloader = (value: boolean) => {
     setReloader(value);
-  };
-
-  const handleHasLength = (prop: boolean) => {
-    setHasLength(prop);
   };
 
   return (
@@ -385,22 +380,14 @@ const MovieDetails = () => {
               </>
             )}
 
-            <>
-              <Divider />
-              <Media params={params} reloader={reloader} />
-            </>
+            <Divider />
+            <Media params={params} reloader={reloader} />
 
-            {hasLength && (
-              <>
-                <Divider />
-                <Recommendations
-                  params={params}
-                  reloader={reloader}
-                  handleReloader={handleReloader}
-                  handleHasLength={handleHasLength}
-                />
-              </>
-            )}
+            <Recommendations
+              params={params}
+              reloader={reloader}
+              handleReloader={handleReloader}
+            />
           </Col>
 
           <Col xs={6}>

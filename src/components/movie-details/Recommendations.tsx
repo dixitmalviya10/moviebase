@@ -6,7 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { swiperConfig } from '../../lib/swiperConfig';
 import { configs } from '../../configs/constants';
 import axiosInstance from '../../lib/axiosInstance';
-import { Tag } from 'rsuite';
+import { Divider, Tag } from 'rsuite';
 import { Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -24,12 +24,10 @@ const Recommendations = ({
   params,
   reloader,
   handleReloader,
-  handleHasLength,
 }: {
   params: { id: string };
   reloader: boolean;
   handleReloader: (_data: boolean) => void;
-  handleHasLength: (_data: boolean) => void;
 }) => {
   const swiperConf = { ...swiperConfig, slidesPerView: 3.5 };
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -46,7 +44,6 @@ const Recommendations = ({
           `/movie/${mediaID}/recommendations`,
         );
         setReccomData(response?.data);
-        handleHasLength(response?.data?.results.length > 0);
       } catch (error) {
         console.log('error', error);
       } finally {
@@ -54,10 +51,14 @@ const Recommendations = ({
       }
     };
     handleTrendingData();
-  }, [reloader, params.id, handleHasLength]);
+  }, [reloader, params.id]);
 
+  if (reccomData.results.length < 1) {
+    return;
+  }
   return (
     <>
+      <Divider />
       <Heading level={4}>Recommendations</Heading>
       <Swiper {...swiperConf}>
         {isLoading ? (

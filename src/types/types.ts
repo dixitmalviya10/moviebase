@@ -142,3 +142,21 @@ export interface TrailerInfoInterface {
   title: string;
   url: string;
 }
+
+export interface TrendingDataArray {
+  readonly id: number;
+  name: string;
+  title: string;
+  original_title: string;
+  release_date: string;
+  poster_path: string;
+  first_air_date: string;
+}
+
+export interface TrendingData {
+  results: TrendingDataArray[];
+}
+
+export interface MoviesInterface {
+  results: TrendingDataArray[];
+}

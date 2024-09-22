@@ -63,7 +63,7 @@ const WatchFree = () => {
         <Tabs.Tab eventKey="movie" title="Movie">
           <Swiper {...swiperConf}>
             {!trendingData?.results ? (
-              <Placeholder.Graph active />
+              <Placeholder.Graph active height={388} />
             ) : (
               trendingData?.results.map((data) => {
                 const path = data?.title
@@ -101,7 +101,7 @@ const WatchFree = () => {
         <Tabs.Tab eventKey="tv" title="TV">
           <Swiper {...swiperConf}>
             {!trendingData?.results ? (
-              <Placeholder.Graph active />
+              <Placeholder.Graph active height={388} />
             ) : (
               trendingData?.results.map((data) => {
                 const path = data?.title
