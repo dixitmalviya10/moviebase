@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 // import axiosInstance from "../../lib/axiosInstance";
 import Heading from 'rsuite/Heading';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Text from 'rsuite/Text';
 import Stack from 'rsuite/Stack';
 import HStack from 'rsuite/HStack';
@@ -206,9 +206,9 @@ const TvDetails = () => {
                     Now Streaming
                   </Text>
                   <Text
-                    as={Link}
-                    to={tvData?.['watch/providers']?.results?.IN?.link}
-                    target="_blank"
+                    // as={Link}
+                    // to={tvData?.['watch/providers']?.results?.IN?.link}
+                    // target="_blank"
                     weight="bold"
                     style={{ color: 'white' }}
                   >

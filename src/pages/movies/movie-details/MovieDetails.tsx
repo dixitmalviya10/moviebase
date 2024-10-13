@@ -230,16 +230,16 @@ const MovieDetails = () => {
                       Now Streaming
                     </Text>
                     <Text weight="bold" style={{ color: 'white' }}>
-                      <a
+                      {/* <a
                         href={
                           movieData?.['watch/providers']?.results?.IN?.link ||
                           '/'
                         }
                         target="_blank"
                         rel="noopener noreferrer"
-                      >
-                        Watch Now
-                      </a>
+                      > */}
+                      Watch Now
+                      {/* </a> */}
                     </Text>
                   </div>
                 </div>
