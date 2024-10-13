@@ -5,6 +5,7 @@ import {
   FlexboxGrid,
   Heading,
   IconButton,
+  Pagination,
   Panel,
   PanelGroup,
   RangeSlider,
@@ -19,8 +20,10 @@ import { useEffect, useState } from 'react';
 import { formatDate } from '../../lib/formatDate';
 import { configs, movieSortList } from '../../configs/constants';
 import { MoviesInterface } from '../../types/types';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Check, RotateCcw } from 'lucide-react';
+import moment from 'moment';
+import { paramSender } from '../../utils/paramSender';
 
 interface ProviderList {
   logo_path: string;
@@ -42,12 +45,14 @@ interface Filters {
   'release_date.gte': Date | null;
   'release_date.lte': Date | null;
   with_genres: number[];
-  with_original_language: string;
+  // with_original_language: string;
   'vote_average.gte': number;
   'vote_average.lte': number;
 }
 
 const Movies = () => {
+  const location = useLocation();
+  const [activePage, setActivePage] = useState<number>(1);
   const [movies, setMovies] = useState<MoviesInterface>();
   const [sortBy, setSortBy] = useState<string | null>('popularity.desc');
   const [filterList, setFilterList] = useState<FilterList>({
@@ -58,14 +63,14 @@ const Movies = () => {
   const [filterParams, setFilterParams] = useState<{
     sort_by: string | null;
     with_watch_providers: string;
-    'release_date.gte': Date | null;
-    'release_date.lte': Date | null;
+    'release_date.gte': Date | null | string;
+    'release_date.lte': Date | null | string;
     with_genres: string;
     certification: string;
     'vote_average.gte': number;
     'vote_average.lte': number;
   }>({
-    sort_by: '',
+    sort_by: 'popularity.desc',
     with_watch_providers: '',
     'release_date.gte': null,
     'release_date.lte': null,
@@ -75,28 +80,16 @@ const Movies = () => {
     'vote_average.lte': 10,
   });
   const [watchProviders, setWatchProviders] = useState<number[]>([]);
+  // console.log('location---', new Date('2024-10-09'));
+
   const [filters, setFilters] = useState<Filters>({
     certification: [],
     'release_date.gte': null,
-    'release_date.lte': new Date('2025-03-21'),
-    with_genres: [],
-    with_original_language: '',
+    'release_date.lte': null,
+    with_genres: [], // Genres can be filtered later
     'vote_average.gte': 0,
-    'vote_average.lte': 10,
+    'vote_average.lte': 10, // Max rating
   });
-  useEffect(() => {
-    const handleMoviesData = async () => {
-      try {
-        const response = await axiosInstance.get('discover/movie', {
-          params: filterParams,
-        });
-        setMovies(response?.data);
-      } catch (error) {
-        console.log('error', error);
-      }
-    };
-    handleMoviesData();
-  }, [filterParams]);
 
   useEffect(() => {
     const handleWatchProvidersData = async () => {
@@ -120,6 +113,95 @@ const Movies = () => {
     };
     handleWatchProvidersData();
   }, []);
+
+  useEffect(() => {
+    const gte = paramSender(location, 'gte') as Date | null;
+    const lte = paramSender(location, 'lte') as Date | null;
+    const paramgte = paramSender(location, 'paramgte');
+    const paramlte = paramSender(location, 'paramlte');
+    setFilters((prev) => ({
+      ...prev,
+      'release_date.gte': gte,
+      'release_date.lte': lte,
+      'vote_average.gte': location.pathname === '/movie/top-rated' ? 8 : 0,
+    }));
+    setFilterParams((prev) => ({
+      ...prev,
+      'release_date.gte': paramgte,
+      'release_date.lte': paramlte,
+      'vote_average.gte': location.pathname === '/movie/top-rated' ? 8 : 0,
+    }));
+  }, [location]);
+
+  useEffect(() => {
+    const handleMoviesData = async () => {
+      try {
+        const common = {
+          include_adult: false,
+          include_video: false,
+          language: 'en-US',
+          page: activePage,
+        };
+        const additionalParams =
+          location.pathname === '/movie/now-playing' ||
+          location.pathname === '/movie/upcoming'
+            ? { with_release_type: 2 | 3 }
+            : location.pathname === '/movie/top-rated'
+              ? { without_genres: '99,10755', 'vote_count.gte': 200 }
+              : null;
+        const response = await axiosInstance.get('discover/movie', {
+          params: { ...filterParams, ...common, ...additionalParams },
+        });
+        setMovies(response?.data);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+    handleMoviesData();
+  }, [filterParams, activePage, location.pathname]);
+
+  const handleSubmitFilters = () => {
+    setFilterParams({
+      sort_by: sortBy,
+      with_watch_providers: watchProviders.join('|'),
+      'release_date.gte': moment(filters['release_date.gte']).format(
+        'YYYY-MM-DD',
+      ),
+      'release_date.lte': moment(filters['release_date.lte']).format(
+        'YYYY-MM-DD',
+      ),
+      with_genres: filters.with_genres.join(','),
+      certification: filters.certification.join('|'),
+      'vote_average.gte': filters['vote_average.gte'],
+      'vote_average.lte': filters['vote_average.lte'],
+    });
+    setUpdated(true);
+  };
+
+  const handleResetFilters = () => {
+    setSortBy('popularity.desc');
+    setWatchProviders([]);
+    setFilters({
+      certification: [],
+      'release_date.gte': moment().subtract(2, 'months').toDate(),
+      'release_date.lte': moment().toDate(),
+      with_genres: [],
+      // with_original_language: '',
+      'vote_average.gte': 0,
+      'vote_average.lte': 10,
+    });
+    setFilterParams({
+      sort_by: '',
+      with_watch_providers: '',
+      'release_date.gte': moment().subtract(2, 'months').format('YYYY-MM-DD'),
+      'release_date.lte': moment().format('YYYY-MM-DD'),
+      with_genres: '',
+      certification: '',
+      'vote_average.gte': 0,
+      'vote_average.lte': 10,
+    });
+    setUpdated(true);
+  };
 
   return (
     <div style={{ marginTop: '2rem' }}>
@@ -216,6 +298,7 @@ const Movies = () => {
                         format="MMM dd, yyyy"
                         value={filters['release_date.gte']}
                         onChange={(value) => {
+                          console.log('value==', value);
                           setFilters((prev) => ({
                             ...prev,
                             'release_date.gte': value,
@@ -346,19 +429,7 @@ const Movies = () => {
                   <ButtonToolbar>
                     <Button
                       disabled={updated}
-                      onClick={() => {
-                        setFilterParams({
-                          sort_by: sortBy,
-                          with_watch_providers: watchProviders.join('|'),
-                          'release_date.gte': filters['release_date.gte'],
-                          'release_date.lte': filters['release_date.lte'],
-                          with_genres: filters.with_genres.join(','),
-                          certification: filters.certification.join('|'),
-                          'vote_average.gte': filters['vote_average.gte'],
-                          'vote_average.lte': filters['vote_average.lte'],
-                        });
-                        setUpdated(true);
-                      }}
+                      onClick={handleSubmitFilters}
                       appearance="primary"
                     >
                       Search
@@ -367,30 +438,7 @@ const Movies = () => {
                       size="xs"
                       icon={<RotateCcw />}
                       appearance="primary"
-                      onClick={() => {
-                        setSortBy('popularity.desc');
-                        setWatchProviders([]);
-                        setFilters({
-                          certification: [],
-                          'release_date.gte': null,
-                          'release_date.lte': new Date('2025-03-21'),
-                          with_genres: [],
-                          with_original_language: '',
-                          'vote_average.gte': 0,
-                          'vote_average.lte': 10,
-                        });
-                        setFilterParams({
-                          sort_by: '',
-                          with_watch_providers: '',
-                          'release_date.gte': null,
-                          'release_date.lte': null,
-                          with_genres: '',
-                          certification: '',
-                          'vote_average.gte': 0,
-                          'vote_average.lte': 10,
-                        });
-                        setUpdated(true);
-                      }}
+                      onClick={handleResetFilters}
                     />
                   </ButtonToolbar>
                 </VStack>
@@ -443,6 +491,26 @@ const Movies = () => {
                 </Link>
               );
             })}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '2rem',
+            }}
+          >
+            <Pagination
+              size="md"
+              // first
+              // last
+              prev
+              next
+              activePage={activePage}
+              onChangePage={setActivePage}
+              ellipsis
+              total={movies?.total_pages || 1}
+              maxButtons={8}
+            />
           </div>
         </FlexboxGrid.Item>
       </FlexboxGrid>

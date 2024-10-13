@@ -159,4 +159,10 @@ export interface TrendingData {
 
 export interface MoviesInterface {
   results: TrendingDataArray[];
+  total_pages: number | null;
+}
+
+export interface TVShowsInterface {
+  results: TrendingDataArray[];
+  total_pages: number | null;
 }

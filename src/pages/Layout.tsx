@@ -1,13 +1,13 @@
-import { NavLink, Outlet } from "react-router-dom";
-import Container from "rsuite/Container";
-import Header from "rsuite/Header";
-import Content from "rsuite/Content";
-import Footer from "rsuite/Footer";
-import Navbar from "rsuite/Navbar";
-import Nav from "rsuite/Nav";
-import DarkMode from "../components/DarkMode";
-import { Affix } from "rsuite";
-import MFooter from "../components/MFooter";
+import { NavLink, Outlet } from 'react-router-dom';
+import Container from 'rsuite/Container';
+import Header from 'rsuite/Header';
+import Content from 'rsuite/Content';
+import Footer from 'rsuite/Footer';
+import Navbar from 'rsuite/Navbar';
+import Nav from 'rsuite/Nav';
+import DarkMode from '../components/DarkMode';
+import { Affix } from 'rsuite';
+import MFooter from '../components/MFooter';
 // import { useContext } from "react";
 // import { ThemeContext } from "../provider/Theme";
 // import { Moon, Sun } from "lucide-react";
@@ -17,7 +17,7 @@ const Layout = () => {
   return (
     <>
       <Container>
-        <Affix top={0}>
+        <Affix top={0} style={{ zIndex: 30 }}>
           <Header>
             <Navbar appearance="inverse" className="fixed-width">
               <Navbar.Brand as={NavLink} to="/">
@@ -25,21 +25,37 @@ const Layout = () => {
               </Navbar.Brand>
               <Nav>
                 <Nav.Menu title="Movies">
-                  <Nav.Item as={NavLink} to="/popular-movies">
+                  <Nav.Item as={NavLink} to="/movie">
                     Popular
                   </Nav.Item>
-                  <Nav.Item>Now Playing</Nav.Item>
-                  <Nav.Item>Upcoming</Nav.Item>
-                  <Nav.Item>Top Rated</Nav.Item>
+                  <Nav.Item as={NavLink} to="/movie/now-playing">
+                    Now Playing
+                  </Nav.Item>
+                  <Nav.Item as={NavLink} to="/movie/upcoming">
+                    Upcoming
+                  </Nav.Item>
+                  <Nav.Item as={NavLink} to="/movie/top-rated">
+                    Top Rated
+                  </Nav.Item>
                 </Nav.Menu>
                 <Nav.Menu title="TV Shows">
-                  <Nav.Item>Popular</Nav.Item>
-                  <Nav.Item>Airing Today</Nav.Item>
-                  <Nav.Item>On TV</Nav.Item>
-                  <Nav.Item>Top Rated</Nav.Item>
+                  <Nav.Item as={NavLink} to="/tv">
+                    Popular
+                  </Nav.Item>
+                  <Nav.Item as={NavLink} to="/tv/airing-today">
+                    Airing Today
+                  </Nav.Item>
+                  <Nav.Item as={NavLink} to="/tv/on-the-air">
+                    On TV
+                  </Nav.Item>
+                  <Nav.Item as={NavLink} to="/tv/top-rated">
+                    Top Rated
+                  </Nav.Item>
                 </Nav.Menu>
                 <Nav.Menu title="People">
-                  <Nav.Item>Popular People</Nav.Item>
+                  <Nav.Item as={NavLink} to="/person">
+                    Popular People
+                  </Nav.Item>
                 </Nav.Menu>
               </Nav>
               <Nav pullRight>

@@ -14,16 +14,16 @@ const MFooter = () => {
             Movies
           </Text>
           <Text className="text-white underline-text" size={15}>
-            <Link to="/">Popular</Link>
+            <Link to="/movie">Popular</Link>
           </Text>
           <Text className="text-white underline-text" size={15}>
-            <Link to="/">Now Playing</Link>
+            <Link to="/movie/now-playing">Now Playing</Link>
           </Text>
           <Text className="text-white underline-text" size={15}>
-            <Link to="/">Upcoming</Link>
+            <Link to="/movie/upcoming">Upcoming</Link>
           </Text>
           <Text className="text-white underline-text" size={15}>
-            <Link to="/">Top Rated</Link>
+            <Link to="/movie/top-rated">Top Rated</Link>
           </Text>
         </VStack>
       </FlexboxGrid.Item>
@@ -33,16 +33,16 @@ const MFooter = () => {
             TV Shows
           </Text>
           <Text className="text-white underline-text" size={15}>
-            <Link to="/">Popular</Link>
+            <Link to="/tv">Popular</Link>
           </Text>
           <Text className="text-white underline-text" size={15}>
-            <Link to="/">Airing Today</Link>
+            <Link to="/tv/airing-today">Airing Today</Link>
           </Text>
           <Text className="text-white underline-text" size={15}>
-            <Link to="/">On TV</Link>
+            <Link to="/tv/on-the-air">On TV</Link>
           </Text>
           <Text className="text-white underline-text" size={15}>
-            <Link to="/">Top Rated</Link>
+            <Link to="/tv/top-rated">Top Rated</Link>
           </Text>
         </VStack>
       </FlexboxGrid.Item>
@@ -52,7 +52,7 @@ const MFooter = () => {
             People
           </Text>
           <Text className="text-white underline-text" size={15}>
-            <Link to="/">Popular People</Link>
+            <Link to="/person">Popular People</Link>
           </Text>
         </VStack>
       </FlexboxGrid.Item>

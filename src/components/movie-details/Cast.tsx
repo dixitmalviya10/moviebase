@@ -33,9 +33,13 @@ const Cast: React.FC<SeriesCastProps> = ({ castData }) => {
           <Placeholder.Graph active />
         ) : (
           castData?.map((data) => {
+            const path = `/person/${data?.id}-${data?.original_name
+              ?.toLowerCase()
+              .replace(/\s+/g, '-')}`;
+
             return (
               <SwiperSlide key={data?.id}>
-                <Link to="/">
+                <Link to={path}>
                   <Panel shaded bordered bodyFill>
                     <img
                       src={
