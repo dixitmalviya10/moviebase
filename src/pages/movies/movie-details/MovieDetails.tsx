@@ -384,6 +384,7 @@ const MovieDetails = () => {
             <Media params={params} reloader={reloader} />
 
             <Recommendations
+              resultType="movie"
               params={params}
               reloader={reloader}
               handleReloader={handleReloader}

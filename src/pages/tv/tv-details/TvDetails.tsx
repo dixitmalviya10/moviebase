@@ -347,6 +347,7 @@ const TvDetails = () => {
             <SeriesMedia params={params} reloader={reloader} />
 
             <Recommendations
+              resultType="tv"
               params={params}
               reloader={reloader}
               handleReloader={handleReloader}

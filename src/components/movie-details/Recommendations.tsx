@@ -21,10 +21,12 @@ interface RecommendationData {
 }
 
 const Recommendations = ({
+  resultType,
   params,
   reloader,
   handleReloader,
 }: {
+  resultType: string;
   params: { id: string };
   reloader: boolean;
   handleReloader: (_data: boolean) => void;
@@ -41,7 +43,7 @@ const Recommendations = ({
     const handleTrendingData = async () => {
       try {
         const response = await axiosInstance.get(
-          `/movie/${mediaID}/recommendations`,
+          `/${resultType}/${mediaID}/recommendations`,
         );
         setReccomData(response?.data);
       } catch (error) {
@@ -51,7 +53,9 @@ const Recommendations = ({
       }
     };
     handleTrendingData();
-  }, [reloader, params.id]);
+  }, [reloader, params.id, resultType]);
+
+  // console.log('reccomData===', reccomData);
 
   if (reccomData.results.length < 1) {
     return;
@@ -91,7 +95,7 @@ const Recommendations = ({
                     />
                     <Panel>
                       <div className="margin-bottom-sm">
-                        {data.title || 'Not Available'}
+                        {data.title || data?.name || 'Not Available'}
                       </div>
 
                       <Tag

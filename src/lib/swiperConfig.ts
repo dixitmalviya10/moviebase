@@ -1,4 +1,4 @@
-import { FreeMode, Mousewheel, Scrollbar } from "swiper/modules";
+import { FreeMode, Mousewheel, Scrollbar } from 'swiper/modules';
 
 export const swiperConfig = {
   scrollbar: {
@@ -6,7 +6,8 @@ export const swiperConfig = {
   },
   slidesPerView: 4.5,
   spaceBetween: 10,
-  cssMode: true,
+  // cssMode: true,
+  grabCursor: true,
   freeMode: true,
   modules: [Mousewheel, FreeMode, Scrollbar],
 };
