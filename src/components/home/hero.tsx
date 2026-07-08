@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, TrendingUp } from 'lucide-react';
+import { Projector, TrendingUp } from 'lucide-react';
 
 import { img } from '@/lib/config';
 import { useTrending } from '@/hooks/use-tmdb';
@@ -36,9 +36,9 @@ export function Hero() {
   const current = backdrops[index];
 
   return (
-    <section className="relative -mt-16 flex min-h-[92vh] items-center overflow-hidden">
+    <section className="relative -mt-16 flex min-h-[92vh] items-center">
       {/* Backdrop */}
-      <div className="absolute inset-0 -z-10 bg-background">
+      <div className="absolute inset-0 -z-10 overflow-hidden bg-background">
         <AnimatePresence mode="popLayout">
           {current?.url && (
             <motion.img
@@ -48,7 +48,10 @@ export function Hero() {
               initial={{ opacity: 0, scale: 1.12 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ opacity: { duration: 1.2 }, scale: { duration: 7 } }}
+              transition={{
+                opacity: { duration: 1.2 },
+                scale: { duration: 7 },
+              }}
               className="absolute inset-0 size-full object-cover"
             />
           )}
@@ -59,7 +62,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,var(--background)_92%)]" />
       </div>
 
-      <div className="mx-auto w-full max-w-[1400px] px-6 py-24">
+      <div className="mx-auto w-full max-w-350 px-6 py-24">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -67,7 +70,7 @@ export function Hero() {
           className="max-w-2xl"
         >
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 glass px-3 py-1.5 text-xs font-medium text-gold-soft">
-            <Sparkles className="size-3.5" />
+            <Projector className="size-3.5" />
             Your gateway to cinema
           </div>
 

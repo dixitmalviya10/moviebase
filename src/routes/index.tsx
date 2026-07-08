@@ -21,7 +21,7 @@ function HomePage() {
   return (
     <>
       <Hero />
-      <div className="mx-auto max-w-[1400px] space-y-16 px-4 py-16 sm:px-6 sm:py-20">
+      <div className="mx-auto max-w-350 space-y-16 px-4 py-16 sm:px-6 sm:py-20">
         <motion.div {...sectionMotion}>
           <TrendingSection />
         </motion.div>

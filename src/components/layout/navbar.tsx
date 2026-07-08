@@ -14,7 +14,11 @@ import {
 import { ThemeToggle } from '@/components/theme-toggle';
 
 type NavItem = { label: string; category: string };
-type NavGroup = { label: string; base: '/movie' | '/tv' | '/person'; items: NavItem[] };
+type NavGroup = {
+  label: string;
+  base: '/movie' | '/tv' | '/person';
+  items: NavItem[];
+};
 
 const NAV_GROUPS: NavGroup[] = [
   {
@@ -84,13 +88,13 @@ export function Navbar() {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
       className={cn(
-        'sticky top-0 z-50 w-full transition-all duration-300',
+        'sticky top-0 z-60 w-full transition-all duration-300',
         scrolled
           ? 'glass border-b border-white/10 shadow-lg shadow-black/20'
           : 'bg-transparent',
       )}
     >
-      <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-2 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-350 items-center gap-2 px-4 sm:px-6">
         <Link to="/" className="group mr-2 flex items-center gap-2">
           <span className="relative flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-[0_0_18px_-4px_var(--primary)] transition-transform group-hover:scale-105">
             <Clapperboard className="size-5" />
@@ -119,7 +123,10 @@ export function Navbar() {
             <DropdownMenuContent align="end" className="min-w-48">
               {NAV_GROUPS.flatMap((group) =>
                 group.items.map((item) => (
-                  <DropdownMenuItem key={`${group.base}-${item.category}`} asChild>
+                  <DropdownMenuItem
+                    key={`${group.base}-${item.category}`}
+                    asChild
+                  >
                     <Link to={group.base} search={{ category: item.category }}>
                       <span className="text-muted-foreground">
                         {group.label}
