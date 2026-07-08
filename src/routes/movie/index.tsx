@@ -102,7 +102,7 @@ function MoviesPage() {
   const total = data?.pages[0]?.total_results ?? 0;
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6 sm:py-10">
+    <div className="mx-auto max-w-350 px-4 py-8 sm:px-6 sm:py-10">
       {/* Header */}
       <header className="mb-6">
         <p className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary/80">

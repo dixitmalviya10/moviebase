@@ -89,7 +89,7 @@ export function HeroSearch() {
   return (
     <div ref={containerRef} className="relative w-full max-w-2xl">
       <div className="relative">
-        <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
+        <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground z-50" />
         <input
           value={value}
           onChange={(e) => {
@@ -103,7 +103,7 @@ export function HeroSearch() {
           className="glass h-14 w-full rounded-2xl border border-white/15 pl-12 pr-12 text-base shadow-xl outline-none transition-all placeholder:text-muted-foreground focus:border-primary/50 focus:ring-2 focus:ring-primary/30"
           aria-label="Search"
         />
-        <div className="absolute right-4 top-1/2 -translate-y-1/2">
+        <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center">
           {isFetching && value ? (
             <Loader2 className="size-5 animate-spin text-primary" />
           ) : value ? (
@@ -113,7 +113,7 @@ export function HeroSearch() {
                 setOpen(false);
               }}
               aria-label="Clear search"
-              className="text-muted-foreground transition-colors hover:text-foreground"
+              className="flex items-center text-muted-foreground transition-colors hover:text-foreground"
             >
               <X className="size-5" />
             </button>

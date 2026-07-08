@@ -55,7 +55,7 @@ export function Footer() {
   return (
     <footer className="relative mt-20 border-t border-white/10 bg-card/40">
       <div className="pointer-events-none absolute inset-x-0 -top-px h-px bg-linear-to-r from-transparent via-primary/50 to-transparent" />
-      <div className="mx-auto grid max-w-[1400px] gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mx-auto grid max-w-350 gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
           <Link to="/" className="flex items-center gap-2">
             <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
@@ -121,7 +121,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-2 px-6 py-5 text-sm text-muted-foreground sm:flex-row">
+        <div className="mx-auto flex max-w-350 flex-col items-center justify-between gap-2 px-6 py-5 text-sm text-muted-foreground sm:flex-row">
           <p>© {new Date().getFullYear()} MovieBase. Built by Dixit.</p>
           <p>
             Data provided by{' '}
