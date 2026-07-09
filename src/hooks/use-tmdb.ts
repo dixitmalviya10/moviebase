@@ -12,6 +12,7 @@ import {
 import type {
   Genre,
   MediaItem,
+  MovieDetails,
   Paginated,
   TimeWindow,
   VideoResults,
@@ -50,6 +51,22 @@ export function useFreeToWatch(media: 'movie' | 'tv', region = 'IN') {
         sort_by: 'popularity.desc',
       }),
     staleTime: 1000 * 60 * 10,
+  });
+}
+
+/**
+ * Full detail for a single movie, with credits, videos, and related titles
+ * folded into one request via `append_to_response`.
+ */
+export function useMovieDetails(id: number | null) {
+  return useQuery({
+    queryKey: ['movie', 'details', id],
+    queryFn: () =>
+      tmdbGet<MovieDetails>(`/movie/${id}`, {
+        append_to_response: 'credits,videos,recommendations,similar',
+      }),
+    enabled: id != null && !Number.isNaN(id),
+    staleTime: 1000 * 60 * 30,
   });
 }
 

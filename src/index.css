@@ -12,33 +12,33 @@
 :root {
   --radius: 0.75rem;
 
-  /* Light theme */
-  --background: oklch(0.99 0.004 95);
-  --foreground: oklch(0.2 0.02 275);
+  /* Light theme — warm off-white base so surfaces read as distinct layers */
+  --background: oklch(0.965 0.006 85);
+  --foreground: oklch(0.21 0.02 275);
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.02 275);
+  --card: oklch(0.995 0.003 90);
+  --card-foreground: oklch(0.21 0.02 275);
 
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.02 275);
+  --popover: oklch(0.995 0.003 90);
+  --popover-foreground: oklch(0.21 0.02 275);
 
   --primary: oklch(0.72 0.16 65);
   --primary-foreground: oklch(0.98 0.01 90);
 
-  --secondary: oklch(0.96 0.01 270);
+  --secondary: oklch(0.925 0.01 90);
   --secondary-foreground: oklch(0.25 0.02 275);
 
-  --muted: oklch(0.96 0.008 270);
-  --muted-foreground: oklch(0.52 0.02 272);
+  --muted: oklch(0.93 0.008 90);
+  --muted-foreground: oklch(0.5 0.02 272);
 
-  --accent: oklch(0.95 0.03 65);
+  --accent: oklch(0.93 0.035 70);
   --accent-foreground: oklch(0.28 0.05 60);
 
   --destructive: oklch(0.58 0.22 27);
   --destructive-foreground: oklch(0.98 0.01 90);
 
-  --border: oklch(0.9 0.01 270);
-  --input: oklch(0.9 0.01 270);
+  --border: oklch(0.87 0.008 85);
+  --input: oklch(0.87 0.008 85);
   --ring: oklch(0.72 0.16 65);
 
   --gold: oklch(0.8 0.15 78);

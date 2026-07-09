@@ -26,6 +26,11 @@ export function HeroSearch() {
   const [open, setOpen] = React.useState(false);
   const [active, setActive] = React.useState(0);
   const containerRef = React.useRef<HTMLDivElement>(null);
+  const itemRefs = React.useRef<(HTMLLIElement | null)[]>([]);
+
+  function scrollActiveIntoView(index: number) {
+    itemRefs.current[index]?.scrollIntoView({ block: 'nearest' });
+  }
 
   const debounced = useDebounce(value, 350);
   const { data, isFetching } = useMultiSearch(debounced);
@@ -74,10 +79,14 @@ export function HeroSearch() {
     if (!open || results.length === 0) return;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setActive((activeIndex + 1) % results.length);
+      const next = (activeIndex + 1) % results.length;
+      setActive(next);
+      scrollActiveIntoView(next);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setActive((activeIndex - 1 + results.length) % results.length);
+      const next = (activeIndex - 1 + results.length) % results.length;
+      setActive(next);
+      scrollActiveIntoView(next);
     } else if (e.key === 'Enter') {
       e.preventDefault();
       go(results[activeIndex]);
@@ -113,7 +122,7 @@ export function HeroSearch() {
                 setOpen(false);
               }}
               aria-label="Clear search"
-              className="flex items-center text-muted-foreground transition-colors hover:text-foreground"
+              className="flex items-center text-muted-foreground transition-colors hover:text-foreground cursor-pointer"
             >
               <X className="size-5" />
             </button>
@@ -135,7 +144,7 @@ export function HeroSearch() {
                 {isFetching ? 'Searching…' : `No results for “${debounced}”`}
               </div>
             ) : (
-              <ul className="max-h-[22rem] overflow-y-auto p-2">
+              <ul className="max-h-88 overflow-y-auto p-2">
                 {results.map((item, i) => {
                   const type = itemType(item);
                   const Meta = typeMeta[type];
@@ -147,12 +156,17 @@ export function HeroSearch() {
                     item.release_date || item.first_air_date,
                   );
                   return (
-                    <li key={`${type}-${item.id}`}>
+                    <li
+                      key={`${type}-${item.id}`}
+                      ref={(el) => {
+                        itemRefs.current[i] = el;
+                      }}
+                    >
                       <button
                         onMouseEnter={() => setActive(i)}
                         onClick={() => go(item)}
                         className={cn(
-                          'flex w-full items-center gap-3 rounded-xl p-2 text-left transition-colors',
+                          'flex w-full items-center gap-3 rounded-xl p-2 text-left transition-colors cursor-pointer',
                           activeIndex === i
                             ? 'bg-primary/15'
                             : 'hover:bg-white/5',

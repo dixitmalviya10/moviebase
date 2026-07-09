@@ -52,7 +52,7 @@ function TrailerCard({
     <button
       onMouseEnter={onHover}
       onClick={onPlay}
-      className="group/trailer block w-full text-left"
+      className="group/trailer block w-full text-left cursor-pointer"
     >
       <div className="relative aspect-video overflow-hidden rounded-xl border border-white/10 bg-muted shadow-lg transition-all duration-300 group-hover/trailer:border-primary/40 group-hover/trailer:shadow-[0_12px_40px_-12px_var(--primary)]">
         {backdrop ? (
@@ -102,8 +102,7 @@ export function LatestTrailersSection() {
     return (
       list.find(
         (v) =>
-          v.site === 'YouTube' &&
-          (v.type === 'Trailer' || v.type === 'Teaser'),
+          v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'),
       ) ?? list.find((v) => v.site === 'YouTube')
     );
   }, [videos]);
@@ -154,7 +153,10 @@ export function LatestTrailersSection() {
         {isPending ? (
           <div className="flex gap-4 overflow-hidden">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="min-w-0 shrink-0 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+              <div
+                key={i}
+                className="min-w-0 shrink-0 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+              >
                 <Skeleton className="aspect-video w-full rounded-xl" />
                 <Skeleton className="mt-2.5 h-4 w-3/5" />
               </div>
@@ -162,7 +164,11 @@ export function LatestTrailersSection() {
           </div>
         ) : (
           <Carousel
-            opts={{ align: 'start', dragFree: true, containScroll: 'trimSnaps' }}
+            opts={{
+              align: 'start',
+              dragFree: true,
+              containScroll: 'trimSnaps',
+            }}
             className="group/row"
           >
             <CarouselContent className="-ml-4">
@@ -188,8 +194,8 @@ export function LatestTrailersSection() {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-1 opacity-0 transition-opacity group-hover/row:opacity-100 disabled:!opacity-0" />
-            <CarouselNext className="right-1 opacity-0 transition-opacity group-hover/row:opacity-100 disabled:!opacity-0" />
+            <CarouselPrevious className="left-1 opacity-0 transition-opacity group-hover/row:opacity-100 disabled:opacity-0!" />
+            <CarouselNext className="right-1 opacity-0 transition-opacity group-hover/row:opacity-100 disabled:opacity-0!" />
           </Carousel>
         )}
       </div>
