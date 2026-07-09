@@ -51,3 +51,65 @@ export interface Genre {
 }
 
 export type TimeWindow = 'day' | 'week';
+
+export interface CastMember {
+  id: number;
+  name: string;
+  character?: string;
+  profile_path?: string | null;
+  order?: number;
+}
+
+export interface CrewMember {
+  id: number;
+  name: string;
+  job?: string;
+  department?: string;
+  profile_path?: string | null;
+}
+
+export interface Credits {
+  cast: CastMember[];
+  crew: CrewMember[];
+}
+
+export interface ProductionCompany {
+  id: number;
+  name: string;
+  logo_path?: string | null;
+  origin_country?: string;
+}
+
+export interface SpokenLanguage {
+  iso_639_1: string;
+  english_name: string;
+  name: string;
+}
+
+/** Full movie detail response (with credits/videos/recommendations appended). */
+export interface MovieDetails {
+  id: number;
+  title: string;
+  original_title?: string;
+  tagline?: string;
+  overview?: string;
+  backdrop_path?: string | null;
+  poster_path?: string | null;
+  release_date?: string;
+  runtime?: number | null;
+  status?: string;
+  vote_average?: number;
+  vote_count?: number;
+  genres?: Genre[];
+  homepage?: string | null;
+  budget?: number;
+  revenue?: number;
+  original_language?: string;
+  spoken_languages?: SpokenLanguage[];
+  production_companies?: ProductionCompany[];
+  imdb_id?: string | null;
+  credits?: Credits;
+  videos?: VideoResults;
+  recommendations?: Paginated<MediaItem>;
+  similar?: Paginated<MediaItem>;
+}

@@ -61,7 +61,7 @@ function NavDropdown({ group }: { group: NavGroup }) {
           <ChevronDown className="size-3.5 opacity-70" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="min-w-44">
+      <DropdownMenuContent align="start" className="min-w-44 z-99">
         {group.items.map((item) => (
           <DropdownMenuItem key={item.category} asChild>
             <Link to={group.base} search={{ category: item.category }}>
@@ -120,7 +120,7 @@ export function Navbar() {
                 <Menu className="size-5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-48">
+            <DropdownMenuContent align="end" className="min-w-48 z-99">
               {NAV_GROUPS.flatMap((group) =>
                 group.items.map((item) => (
                   <DropdownMenuItem
