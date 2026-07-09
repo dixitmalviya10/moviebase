@@ -30,3 +30,15 @@ export function formatRating(vote?: number | null): string {
   if (!vote || vote <= 0) return 'NR';
   return vote.toFixed(1);
 }
+
+const currencyFmt = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  maximumFractionDigits: 0,
+});
+
+/** Format a USD money amount; falls back to an em dash when unknown. */
+export function formatCurrency(amount?: number | null): string {
+  if (!amount || amount <= 0) return '—';
+  return currencyFmt.format(amount);
+}
