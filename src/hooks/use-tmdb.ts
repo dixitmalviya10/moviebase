@@ -16,6 +16,7 @@ import type {
   MovieDetails,
   Paginated,
   TimeWindow,
+  TvDetails,
   VideoResults,
 } from '@/types/tmdb';
 
@@ -65,6 +66,22 @@ export function useMovieDetails(id: number | null) {
     queryFn: () =>
       tmdbGet<MovieDetails>(`/movie/${id}`, {
         append_to_response: 'credits,videos,recommendations,similar',
+      }),
+    enabled: id != null && !Number.isNaN(id),
+    staleTime: 1000 * 60 * 30,
+  });
+}
+
+/**
+ * Full detail for a single TV show. `external_ids` is appended because — unlike
+ * movies — TV responses carry no top-level `imdb_id`.
+ */
+export function useTvDetails(id: number | null) {
+  return useQuery({
+    queryKey: ['tv', 'details', id],
+    queryFn: () =>
+      tmdbGet<TvDetails>(`/tv/${id}`, {
+        append_to_response: 'credits,videos,recommendations,similar,external_ids',
       }),
     enabled: id != null && !Number.isNaN(id),
     staleTime: 1000 * 60 * 30,

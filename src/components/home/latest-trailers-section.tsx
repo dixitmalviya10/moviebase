@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
 import { img } from '@/lib/config';
+import { pickTrailer } from '@/lib/video';
 import { useMediaList, useVideos } from '@/hooks/use-tmdb';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -97,15 +98,10 @@ export function LatestTrailersSection() {
     selected?.language,
   );
 
-  const trailer = React.useMemo(() => {
-    const list = videos?.results ?? [];
-    return (
-      list.find(
-        (v) =>
-          v.site === 'YouTube' && (v.type === 'Trailer' || v.type === 'Teaser'),
-      ) ?? list.find((v) => v.site === 'YouTube')
-    );
-  }, [videos]);
+  const trailer = React.useMemo(
+    () => pickTrailer(videos?.results),
+    [videos],
+  );
 
   return (
     <section className="relative overflow-hidden rounded-3xl border border-white/10">
