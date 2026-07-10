@@ -69,7 +69,7 @@ export function MediaFilters<C extends string>({
                   'rounded-full px-3.5 py-1.5 text-sm font-medium transition-all',
                   active
                     ? 'bg-primary text-primary-foreground shadow-[0_0_18px_-6px_var(--primary)]'
-                    : 'text-muted-foreground hover:text-foreground',
+                    : 'text-muted-foreground hover:text-foreground cursor-pointer',
                 )}
               >
                 {cat.label}
