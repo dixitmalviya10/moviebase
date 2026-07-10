@@ -1,17 +1,20 @@
 /** Category presets + discover param construction for the Movies page. */
 
+import {
+  shiftDays,
+  ymd,
+  type FilterCategory,
+  type FilterState,
+  type SortOption,
+} from '@/lib/media-filters';
+
 export type MovieCategory =
   | 'popular'
   | 'now_playing'
   | 'upcoming'
   | 'top_rated';
 
-export const MOVIE_CATEGORIES: {
-  value: MovieCategory;
-  label: string;
-  title: string;
-  eyebrow: string;
-}[] = [
+export const MOVIE_CATEGORIES: FilterCategory<MovieCategory>[] = [
   {
     value: 'popular',
     label: 'Popular',
@@ -38,7 +41,7 @@ export const MOVIE_CATEGORIES: {
   },
 ];
 
-export const MOVIE_SORT_OPTIONS: { label: string; value: string }[] = [
+export const MOVIE_SORT_OPTIONS: SortOption[] = [
   { label: 'Popularity ↓', value: 'popularity.desc' },
   { label: 'Popularity ↑', value: 'popularity.asc' },
   { label: 'Rating ↓', value: 'vote_average.desc' },
@@ -55,21 +58,7 @@ export function categoryMeta(category: MovieCategory) {
   );
 }
 
-function ymd(date: Date): string {
-  return date.toISOString().slice(0, 10);
-}
-
-function shiftDays(days: number): Date {
-  const d = new Date();
-  d.setDate(d.getDate() + days);
-  return d;
-}
-
-export interface MovieFilterState {
-  category: MovieCategory;
-  genres: number[];
-  sort?: string;
-}
+export type MovieFilterState = FilterState<MovieCategory>;
 
 /** The sort actually applied (explicit override, else the category default). */
 export function effectiveSort(state: MovieFilterState): string {

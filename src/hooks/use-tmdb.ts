@@ -9,6 +9,7 @@ import {
   buildMovieDiscoverParams,
   type MovieFilterState,
 } from '@/lib/movie-filters';
+import { buildTvDiscoverParams, type TvFilterState } from '@/lib/tv-filters';
 import type {
   Genre,
   MediaItem,
@@ -97,6 +98,16 @@ export function useMovieGenres() {
   });
 }
 
+/** TV genre list (for filter chips). Cached indefinitely. */
+export function useTvGenres() {
+  return useQuery({
+    queryKey: ['genres', 'tv'],
+    queryFn: () => tmdbGet<{ genres: Genre[] }>('/genre/tv/list'),
+    staleTime: Infinity,
+    select: (data) => data.genres,
+  });
+}
+
 /** Infinite, filterable discovery feed for the Movies page. */
 export function useInfiniteMovies(state: MovieFilterState) {
   return useInfiniteQuery({
@@ -104,6 +115,24 @@ export function useInfiniteMovies(state: MovieFilterState) {
     queryFn: ({ pageParam }) =>
       tmdbGet<Paginated<MediaItem>>('/discover/movie', {
         ...buildMovieDiscoverParams(state),
+        page: pageParam,
+      }),
+    initialPageParam: 1,
+    getNextPageParam: (last) =>
+      last.page < Math.min(last.total_pages, 500)
+        ? last.page + 1
+        : undefined,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+/** Infinite, filterable discovery feed for the TV Shows page. */
+export function useInfiniteTvShows(state: TvFilterState) {
+  return useInfiniteQuery({
+    queryKey: ['discover', 'tv', state],
+    queryFn: ({ pageParam }) =>
+      tmdbGet<Paginated<MediaItem>>('/discover/tv', {
+        ...buildTvDiscoverParams(state),
         page: pageParam,
       }),
     initialPageParam: 1,
