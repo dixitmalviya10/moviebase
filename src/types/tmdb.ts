@@ -23,6 +23,20 @@ export interface MediaItem {
   known_for_department?: string;
 }
 
+/** A person as returned by the popular / trending / search person lists. */
+export interface PersonItem {
+  id: number;
+  name: string;
+  media_type?: MediaType;
+  profile_path?: string | null;
+  known_for_department?: string;
+  /** The titles TMDB considers this person best known for (max ~3). */
+  known_for?: MediaItem[];
+  popularity?: number;
+  gender?: number;
+  adult?: boolean;
+}
+
 export interface Paginated<T> {
   page: number;
   results: T[];
