@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Name-search result pages are thin and endlessly variable — no crawl value.
+Disallow: /*?*q=
+
+# Keep the crawler off filter permutations; every one of them canonicalises
+# back to its plain category page anyway.
+Disallow: /*?*sort=
+Disallow: /*?*genres=
+
+Sitemap: https://moviebase-psi.vercel.app/sitemap.xml

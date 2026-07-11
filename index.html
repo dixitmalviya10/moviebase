@@ -4,11 +4,65 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b0b0f" />
+
+    <!-- Speed up the first poster/backdrop paint: TMDB's CDN is on the critical path. -->
+    <link rel="preconnect" href="https://image.tmdb.org" />
+    <link rel="preconnect" href="https://api.themoviedb.org" />
+    <link rel="dns-prefetch" href="https://image.tmdb.org" />
+
+    <!--
+      Static SEO fallback.
+
+      The app is client-rendered, so per-route tags are injected by TanStack
+      Router's <HeadContent /> once JS runs. These tags cover the case where it
+      doesn't: link-preview crawlers (Facebook, X, WhatsApp, Slack, LinkedIn)
+      never execute JS and would otherwise see an empty <head>.
+
+      Every tag here is marked data-seo-fallback and removed in main.tsx before
+      React mounts. React does not dedupe against pre-existing tags, so leaving
+      them would produce two <title> elements — and the browser honours the
+      first, which would pin every route to this generic title.
+    -->
+    <title data-seo-fallback>MovieBase — Discover Movies, TV Shows &amp; People</title>
     <meta
+      data-seo-fallback
       name="description"
-      content="MovieBase — discover millions of movies, TV shows and people. Search, browse trending titles and watch the latest trailers."
+      content="Discover millions of movies, TV shows and people. Search, browse trending titles, read cast and crew credits, and watch the latest trailers."
     />
-    <title>MovieBase — Discover Movies, TV Shows &amp; People</title>
+    <meta data-seo-fallback property="og:site_name" content="MovieBase" />
+    <meta data-seo-fallback property="og:type" content="website" />
+    <meta
+      data-seo-fallback
+      property="og:title"
+      content="MovieBase — Discover Movies, TV Shows &amp; People"
+    />
+    <meta
+      data-seo-fallback
+      property="og:description"
+      content="Discover millions of movies, TV shows and people. Search, browse trending titles, read cast and crew credits, and watch the latest trailers."
+    />
+    <meta
+      data-seo-fallback
+      property="og:image"
+      content="/assets/images/movie-banner.jpg"
+    />
+    <meta data-seo-fallback name="twitter:card" content="summary_large_image" />
+    <meta
+      data-seo-fallback
+      name="twitter:title"
+      content="MovieBase — Discover Movies, TV Shows &amp; People"
+    />
+    <meta
+      data-seo-fallback
+      name="twitter:description"
+      content="Discover millions of movies, TV shows and people. Search, browse trending titles, read cast and crew credits, and watch the latest trailers."
+    />
+    <meta
+      data-seo-fallback
+      name="twitter:image"
+      content="/assets/images/movie-banner.jpg"
+    />
     <script>
       // Apply persisted theme before paint to avoid a flash.
       (function () {

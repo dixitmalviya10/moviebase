@@ -12,6 +12,7 @@ import {
   type MovieCategory,
   type MovieFilterState,
 } from '@/lib/movie-filters';
+import { canonical, seo } from '@/lib/seo';
 import type { MediaItem } from '@/types/tmdb';
 
 interface MovieSearch {
@@ -22,7 +23,34 @@ interface MovieSearch {
 
 const CATEGORIES = ['popular', 'now_playing', 'upcoming', 'top_rated'];
 
+const CATEGORY_DESCRIPTIONS: Record<MovieCategory, string> = {
+  popular: 'Browse the most popular movies right now, ranked by what people are actually watching. Ratings, trailers, cast and crew for every title.',
+  now_playing: 'See which movies are playing in theaters right now. Showtimes-ready listings with ratings, trailers, cast and crew.',
+  upcoming: 'Upcoming movies and new releases coming soon to theaters. Release dates, first trailers, cast and crew.',
+  top_rated: 'The highest-rated movies of all time, ranked by audience score. Explore the best films ever made with ratings, trailers and credits.',
+};
+
 export const Route = createFileRoute('/movie/')({
+  /**
+   * Title and description track the active category. Genre/sort permutations
+   * are all the same set of films in a different order, so they canonicalise
+   * back to the plain category URL rather than competing as separate pages.
+   */
+  head: ({ match }) => {
+    const category = (match.search.category as MovieCategory) ?? 'popular';
+    const meta = categoryMeta(category);
+    const path = category === 'popular' ? '/movie' : `/movie?category=${category}`;
+
+    return {
+      meta: seo({
+        title: `${meta.title} — Movies | MovieBase`,
+        description: CATEGORY_DESCRIPTIONS[category],
+        path,
+        keywords: [meta.title.toLowerCase(), 'movies', 'films', 'watch movies'],
+      }),
+      links: canonical(path),
+    };
+  },
   validateSearch: (search: Record<string, unknown>): MovieSearch => {
     const out: MovieSearch = {};
     if (

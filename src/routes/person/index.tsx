@@ -15,6 +15,7 @@ import {
   type PersonCategory,
   type PersonFilterState,
 } from '@/lib/person-filters';
+import { canonical, seo } from '@/lib/seo';
 import type { PersonItem } from '@/types/tmdb';
 
 interface PersonSearch {
@@ -24,7 +25,44 @@ interface PersonSearch {
 
 const CATEGORIES: string[] = PERSON_CATEGORIES.map((c) => c.value);
 
+const CATEGORY_DESCRIPTIONS: Record<PersonCategory, string> = {
+  popular: 'Browse the most popular actors, directors and crew. Biographies, filmographies, photos and full credits for every person.',
+  trending_day: 'The actors, directors and creators trending today. Biographies, filmographies and full credits.',
+  trending_week: 'The actors, directors and creators trending this week. Biographies, filmographies and full credits.',
+};
+
 export const Route = createFileRoute('/person/')({
+  head: ({ match }) => {
+    const { category: raw, q } = match.search;
+    const category = (raw as PersonCategory) ?? 'popular';
+    const meta = personCategoryMeta(category);
+    const path =
+      category === 'popular' ? '/person' : `/person?category=${category}`;
+
+    // A name query is a thin, endlessly-variable result page — keep those out
+    // of the index and point them at the browse page they were launched from.
+    if (q) {
+      return {
+        meta: seo({
+          title: `Search results for “${q}” — People | MovieBase`,
+          description: CATEGORY_DESCRIPTIONS[category],
+          path,
+          noindex: true,
+        }),
+        links: canonical(path),
+      };
+    }
+
+    return {
+      meta: seo({
+        title: `${meta.title} | MovieBase`,
+        description: CATEGORY_DESCRIPTIONS[category],
+        path,
+        keywords: [meta.title.toLowerCase(), 'actors', 'directors', 'cast'],
+      }),
+      links: canonical(path),
+    };
+  },
   validateSearch: (search: Record<string, unknown>): PersonSearch => {
     const out: PersonSearch = {};
     if (

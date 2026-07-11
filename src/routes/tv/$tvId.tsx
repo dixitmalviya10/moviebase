@@ -12,9 +12,17 @@ import {
   Tv,
 } from 'lucide-react';
 
-import { img } from '@/lib/config';
+import { img, mediaPath } from '@/lib/config';
 import { formatDate, formatRuntime, formatRating, getYear } from '@/lib/format';
-import { useTvDetails } from '@/hooks/use-tmdb';
+import { tvDetailsQuery, useTvDetails } from '@/hooks/use-tmdb';
+import {
+  breadcrumbSchema,
+  canonical,
+  jsonLd,
+  seo,
+  tvDescription,
+  tvSchema,
+} from '@/lib/seo';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SectionHeader } from '@/components/media/section-header';
@@ -30,6 +38,58 @@ import { pickTrailer } from '@/lib/video';
 import type { EpisodeBrief, Season, TvDetails } from '@/types/tmdb';
 
 export const Route = createFileRoute('/tv/$tvId')({
+  /** See the movie detail route — same loader-feeds-head arrangement. */
+  loader: ({ context, params }) => {
+    const id = Number.parseInt(params.tvId, 10);
+    if (Number.isNaN(id)) return null;
+    return context.queryClient
+      .ensureQueryData(tvDetailsQuery(id))
+      .catch(() => null);
+  },
+
+  /* See the movie detail route — keeps the skeleton up while the loader runs. */
+  pendingMs: 0,
+  pendingComponent: DetailSkeleton,
+
+  head: ({ loaderData: tv }) => {
+    if (!tv) return {};
+
+    const year = getYear(tv.first_air_date);
+    const path = mediaPath('tv', tv.id, tv.name);
+    const title = `${tv.name}${year ? ` (${year})` : ''} — TV Series | MovieBase`;
+
+    return {
+      meta: [
+        ...seo({
+          title,
+          description: tvDescription(tv),
+          image:
+            img.backdrop(tv.backdrop_path, 'w1280') ??
+            img.poster(tv.poster_path, 'w500'),
+          path,
+          type: 'video.tv_show',
+          keywords: [
+            tv.name,
+            ...(tv.genres?.map((g) => g.name) ?? []),
+            'tv show',
+            'series',
+            'episodes',
+            'cast',
+          ],
+        }),
+        jsonLd(tvSchema(tv)),
+        jsonLd(
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'TV Shows', path: '/tv' },
+            { name: tv.name, path },
+          ]),
+        ),
+      ],
+      links: canonical(path),
+    };
+  },
+
   component: TvDetailPage,
 });
 

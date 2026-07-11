@@ -2,9 +2,17 @@ import * as React from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { Cake, MapPin, Globe, ExternalLink, User } from 'lucide-react';
 
-import { img } from '@/lib/config';
+import { img, mediaPath } from '@/lib/config';
 import { calculateAge, formatDate } from '@/lib/format';
-import { usePersonDetails } from '@/hooks/use-tmdb';
+import { personDetailsQuery, usePersonDetails } from '@/hooks/use-tmdb';
+import {
+  breadcrumbSchema,
+  canonical,
+  jsonLd,
+  personDescription,
+  personSchema,
+  seo,
+} from '@/lib/seo';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -20,6 +28,55 @@ import { SocialLinks } from '@/components/person/social-links';
 import type { PersonCredit, PersonDetails } from '@/types/tmdb';
 
 export const Route = createFileRoute('/person/$personId')({
+  /** See the movie detail route — same loader-feeds-head arrangement. */
+  loader: ({ context, params }) => {
+    const id = Number.parseInt(params.personId, 10);
+    if (Number.isNaN(id)) return null;
+    return context.queryClient
+      .ensureQueryData(personDetailsQuery(id))
+      .catch(() => null);
+  },
+
+  /* See the movie detail route — keeps the skeleton up while the loader runs. */
+  pendingMs: 0,
+  pendingComponent: DetailSkeleton,
+
+  head: ({ loaderData: person }) => {
+    if (!person) return {};
+
+    const path = mediaPath('person', person.id, person.name);
+    const role = person.known_for_department;
+
+    return {
+      meta: [
+        ...seo({
+          title: `${person.name}${role ? ` — ${role}` : ''} | MovieBase`,
+          description: personDescription(person),
+          // No backdrop exists for a person — the tall portrait is all we have.
+          image: img.profile(person.profile_path, 'h632'),
+          path,
+          type: 'profile',
+          keywords: [
+            person.name,
+            role ?? 'actor',
+            'filmography',
+            'biography',
+            'movies',
+          ],
+        }),
+        jsonLd(personSchema(person)),
+        jsonLd(
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'People', path: '/person' },
+            { name: person.name, path },
+          ]),
+        ),
+      ],
+      links: canonical(path),
+    };
+  },
+
   component: PersonDetailPage,
 });
 
