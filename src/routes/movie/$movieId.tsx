@@ -10,7 +10,7 @@ import {
   ImageOff,
 } from 'lucide-react';
 
-import { img } from '@/lib/config';
+import { img, mediaPath } from '@/lib/config';
 import {
   formatDate,
   formatRuntime,
@@ -18,7 +18,15 @@ import {
   formatCurrency,
   getYear,
 } from '@/lib/format';
-import { useMovieDetails } from '@/hooks/use-tmdb';
+import { movieDetailsQuery, useMovieDetails } from '@/hooks/use-tmdb';
+import {
+  breadcrumbSchema,
+  canonical,
+  jsonLd,
+  movieDescription,
+  movieSchema,
+  seo,
+} from '@/lib/seo';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SectionHeader } from '@/components/media/section-header';
@@ -34,6 +42,73 @@ import { pickTrailer } from '@/lib/video';
 import type { CrewMember, MovieDetails } from '@/types/tmdb';
 
 export const Route = createFileRoute('/movie/$movieId')({
+  /**
+   * Warm the detail query before the route renders so `head()` has real data to
+   * build the title, description and social card from. The component's
+   * `useMovieDetails` reads the same cache entry, so this is not an extra fetch.
+   *
+   * Failures are swallowed on purpose: `head()` then falls back to the site
+   * defaults and the component's own error state handles retry, which keeps a
+   * dead TMDB request from blanking the whole route.
+   */
+  loader: ({ context, params }) => {
+    const id = Number.parseInt(params.movieId, 10);
+    if (Number.isNaN(id)) return null;
+    return context.queryClient
+      .ensureQueryData(movieDetailsQuery(id))
+      .catch(() => null);
+  },
+
+  /*
+   * The loader gates the render, so without these the route paints nothing at
+   * all (not even the navbar) until TMDB answers. `pendingMs: 0` shows the same
+   * skeleton the component used to render itself while its query was in flight.
+   */
+  pendingMs: 0,
+  pendingComponent: DetailSkeleton,
+
+  head: ({ loaderData: movie }) => {
+    if (!movie) return {};
+
+    const year = getYear(movie.release_date);
+    const path = mediaPath('movie', movie.id, movie.title);
+    const title = `${movie.title}${year ? ` (${year})` : ''} — Movie | MovieBase`;
+
+    return {
+      meta: [
+        ...seo({
+          title,
+          description: movieDescription(movie),
+          // Backdrops are 16:9, which is exactly the shape a social card wants.
+          image:
+            img.backdrop(movie.backdrop_path, 'w1280') ??
+            img.poster(movie.poster_path, 'w500'),
+          path,
+          type: 'video.movie',
+          keywords: [
+            movie.title,
+            ...(movie.genres?.map((g) => g.name) ?? []),
+            'movie',
+            'watch',
+            'trailer',
+            'cast',
+          ],
+        }),
+        jsonLd(movieSchema(movie)),
+        jsonLd(
+          breadcrumbSchema([
+            { name: 'Home', path: '/' },
+            { name: 'Movies', path: '/movie' },
+            { name: movie.title, path },
+          ]),
+        ),
+      ],
+      // The id-only URL (/movie/27205) and the slugged one both resolve here,
+      // so point every variant at the slugged form.
+      links: canonical(path),
+    };
+  },
+
   component: MovieDetailPage,
 });
 

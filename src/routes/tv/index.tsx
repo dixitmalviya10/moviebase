@@ -13,6 +13,7 @@ import {
   type TvCategory,
   type TvFilterState,
 } from '@/lib/tv-filters';
+import { canonical, seo } from '@/lib/seo';
 import type { MediaItem } from '@/types/tmdb';
 
 interface TvSearch {
@@ -23,7 +24,30 @@ interface TvSearch {
 
 const CATEGORIES: string[] = TV_CATEGORIES.map((c) => c.value);
 
+const CATEGORY_DESCRIPTIONS: Record<TvCategory, string> = {
+  popular: 'Browse the most popular TV shows and series right now. Episode guides, ratings, trailers, cast and crew for every show.',
+  airing_today: "TV shows airing today. See what's on, with episode details, ratings, trailers and full cast lists.",
+  on_the_air: 'TV series currently on the air with new episodes this week. Ratings, episode guides, trailers and cast.',
+  top_rated: 'The highest-rated TV series of all time, ranked by audience score. Explore the best shows ever made with ratings and credits.',
+};
+
 export const Route = createFileRoute('/tv/')({
+  /** See the movies route — same category-driven title / canonical strategy. */
+  head: ({ match }) => {
+    const category = (match.search.category as TvCategory) ?? 'popular';
+    const meta = tvCategoryMeta(category);
+    const path = category === 'popular' ? '/tv' : `/tv?category=${category}`;
+
+    return {
+      meta: seo({
+        title: `${meta.title} — TV Shows | MovieBase`,
+        description: CATEGORY_DESCRIPTIONS[category],
+        path,
+        keywords: [meta.title.toLowerCase(), 'tv shows', 'series', 'streaming'],
+      }),
+      links: canonical(path),
+    };
+  },
   validateSearch: (search: Record<string, unknown>): TvSearch => {
     const out: TvSearch = {};
     if (

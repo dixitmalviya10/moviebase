@@ -31,6 +31,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
+/**
+ * Drop the static SEO tags from index.html now that JS is running — the router's
+ * <HeadContent /> owns the head from here on.
+ *
+ * They exist only for crawlers that don't execute JS. React appends its hoisted
+ * tags rather than replacing matching ones, so leaving these in place would give
+ * the document two <title> elements; browsers honour the first, which would pin
+ * every route to the generic fallback title.
+ */
+for (const tag of document.querySelectorAll('head [data-seo-fallback]')) {
+  tag.remove();
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>

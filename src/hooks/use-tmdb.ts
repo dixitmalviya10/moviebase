@@ -2,6 +2,7 @@ import {
   useQuery,
   useInfiniteQuery,
   keepPreviousData,
+  queryOptions,
 } from '@tanstack/react-query';
 
 import { tmdbGet } from '@/lib/tmdb';
@@ -63,17 +64,25 @@ export function useFreeToWatch(media: 'movie' | 'tv', region = 'IN') {
 }
 
 /**
+ * Detail-query factories.
+ *
+ * These are shared by the route `loader` (via `queryClient.ensureQueryData`, so
+ * the route's `head()` has real data to build meta tags from) and by the hooks
+ * below. Both sides resolve to the same cache entry, so the loader's fetch is
+ * the only one — the component reads it straight from cache.
+ */
+
+/**
  * Full detail for a single movie, with credits, videos, and related titles
  * folded into one request via `append_to_response`.
  */
-export function useMovieDetails(id: number | null) {
-  return useQuery({
+export function movieDetailsQuery(id: number) {
+  return queryOptions({
     queryKey: ['movie', 'details', id],
     queryFn: () =>
       tmdbGet<MovieDetails>(`/movie/${id}`, {
         append_to_response: 'credits,videos,recommendations,similar',
       }),
-    enabled: id != null && !Number.isNaN(id),
     staleTime: 1000 * 60 * 30,
   });
 }
@@ -82,14 +91,14 @@ export function useMovieDetails(id: number | null) {
  * Full detail for a single TV show. `external_ids` is appended because — unlike
  * movies — TV responses carry no top-level `imdb_id`.
  */
-export function useTvDetails(id: number | null) {
-  return useQuery({
+export function tvDetailsQuery(id: number) {
+  return queryOptions({
     queryKey: ['tv', 'details', id],
     queryFn: () =>
       tmdbGet<TvDetails>(`/tv/${id}`, {
-        append_to_response: 'credits,videos,recommendations,similar,external_ids',
+        append_to_response:
+          'credits,videos,recommendations,similar,external_ids',
       }),
-    enabled: id != null && !Number.isNaN(id),
     staleTime: 1000 * 60 * 30,
   });
 }
@@ -98,15 +107,35 @@ export function useTvDetails(id: number | null) {
  * Full detail for a single person. `combined_credits` merges their movie and TV
  * work into one list (each entry carries its own `media_type`).
  */
-export function usePersonDetails(id: number | null) {
-  return useQuery({
+export function personDetailsQuery(id: number) {
+  return queryOptions({
     queryKey: ['person', 'details', id],
     queryFn: () =>
       tmdbGet<PersonDetails>(`/person/${id}`, {
         append_to_response: 'combined_credits,external_ids',
       }),
-    enabled: id != null && !Number.isNaN(id),
     staleTime: 1000 * 60 * 30,
+  });
+}
+
+export function useMovieDetails(id: number | null) {
+  return useQuery({
+    ...movieDetailsQuery(id as number),
+    enabled: id != null && !Number.isNaN(id),
+  });
+}
+
+export function useTvDetails(id: number | null) {
+  return useQuery({
+    ...tvDetailsQuery(id as number),
+    enabled: id != null && !Number.isNaN(id),
+  });
+}
+
+export function usePersonDetails(id: number | null) {
+  return useQuery({
+    ...personDetailsQuery(id as number),
+    enabled: id != null && !Number.isNaN(id),
   });
 }
 
