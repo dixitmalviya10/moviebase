@@ -29,11 +29,16 @@
       property="og:description"
       content="Discover millions of movies, TV shows and people. Search, browse trending titles, read cast and crew credits, and watch the latest trailers."
     />
+    <!-- Absolute: og:image is fetched off-origin, so a relative path resolves
+         against the crawler, not the site. These fallbacks exist for exactly the
+         crawlers that don't run JS (Facebook/X/WhatsApp/Slack). -->
     <meta
       data-seo-fallback
       property="og:image"
-      content="/assets/images/movie-banner.jpg"
+      content="https://moviebase-psi.vercel.app/assets/images/movie-banner.jpg"
     />
+    <meta data-seo-fallback property="og:image:width" content="1200" />
+    <meta data-seo-fallback property="og:image:height" content="630" />
     <meta data-seo-fallback name="twitter:card" content="summary_large_image" />
     <meta
       data-seo-fallback
@@ -48,7 +53,7 @@
     <meta
       data-seo-fallback
       name="twitter:image"
-      content="/assets/images/movie-banner.jpg"
+      content="https://moviebase-psi.vercel.app/assets/images/movie-banner.jpg"
     />
     <script>
       (function () {
