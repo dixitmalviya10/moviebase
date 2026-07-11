@@ -1,10 +1,15 @@
 import * as React from 'react';
 
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import { SectionHeader } from '@/components/media/section-header';
 import { PosterRow, PosterRowSkeleton } from '@/components/media/poster-row';
 import { useTrending } from '@/hooks/use-tmdb';
 import type { TimeWindow } from '@/types/tmdb';
+
+const TIME_WINDOWS = [
+  { value: 'day', label: 'Today' },
+  { value: 'week', label: 'This Week' },
+] as const satisfies readonly { value: TimeWindow; label: string }[];
 
 export function TrendingSection() {
   const [window, setWindow] = React.useState<TimeWindow>('day');
@@ -16,15 +21,12 @@ export function TrendingSection() {
         eyebrow="What everyone's watching"
         title="Trending"
         action={
-          <Tabs
+          <SegmentedControl
+            options={TIME_WINDOWS}
             value={window}
-            onValueChange={(v) => setWindow(v as TimeWindow)}
-          >
-            <TabsList>
-              <TabsTrigger value="day">Today</TabsTrigger>
-              <TabsTrigger value="week">This Week</TabsTrigger>
-            </TabsList>
-          </Tabs>
+            onChange={setWindow}
+            label="Time window"
+          />
         }
       />
       {isPending ? (

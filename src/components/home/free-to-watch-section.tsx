@@ -1,9 +1,14 @@
 import * as React from 'react';
 
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import { SectionHeader } from '@/components/media/section-header';
 import { PosterRow, PosterRowSkeleton } from '@/components/media/poster-row';
 import { useFreeToWatch } from '@/hooks/use-tmdb';
+
+const MEDIA_OPTIONS = [
+  { value: 'movie', label: 'Movies' },
+  { value: 'tv', label: 'TV' },
+] as const;
 
 export function FreeToWatchSection() {
   const [media, setMedia] = React.useState<'movie' | 'tv'>('movie');
@@ -15,12 +20,12 @@ export function FreeToWatchSection() {
         eyebrow="No subscription needed"
         title="Free to Watch"
         action={
-          <Tabs value={media} onValueChange={(v) => setMedia(v as 'movie' | 'tv')}>
-            <TabsList>
-              <TabsTrigger value="movie">Movies</TabsTrigger>
-              <TabsTrigger value="tv">TV</TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <SegmentedControl
+            options={MEDIA_OPTIONS}
+            value={media}
+            onChange={setMedia}
+            label="Media type"
+          />
         }
       />
       {isPending ? (
