@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { User } from 'lucide-react';
 
 import { img } from '@/lib/config';
@@ -13,7 +14,11 @@ import type { CastMember } from '@/types/tmdb';
 function CastCard({ person }: { person: CastMember }) {
   const profile = img.profile(person.profile_path, 'w185');
   return (
-    <div className="group/cast">
+    <Link
+      to="/person/$personId"
+      params={{ personId: String(person.id) }}
+      className="group/cast block focus:outline-none"
+    >
       <div className="aspect-2/3 overflow-hidden rounded-xl border border-white/10 bg-muted shadow-md transition-all duration-300 group-hover/cast:border-primary/40">
         {profile ? (
           <img
@@ -29,7 +34,7 @@ function CastCard({ person }: { person: CastMember }) {
         )}
       </div>
       <div className="mt-2 px-0.5">
-        <p className="truncate text-sm font-semibold leading-tight">
+        <p className="truncate text-sm font-semibold leading-tight transition-colors group-hover/cast:text-primary">
           {person.name}
         </p>
         {person.character && (
@@ -38,7 +43,7 @@ function CastCard({ person }: { person: CastMember }) {
           </p>
         )}
       </div>
-    </div>
+    </Link>
   );
 }
 
