@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { img } from '@/lib/config';
 import { pickTrailer } from '@/lib/video';
 import { useMediaList, useVideos } from '@/hooks/use-tmdb';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Carousel,
@@ -129,20 +129,12 @@ export function LatestTrailersSection() {
           eyebrow="Fresh from the studios"
           title="Latest Trailers"
           action={
-            <Tabs
+            <SegmentedControl
+              options={TABS}
               value={tab.value}
-              onValueChange={(v) =>
-                setTab(TABS.find((t) => t.value === v) ?? TABS[0])
-              }
-            >
-              <TabsList>
-                {TABS.map((t) => (
-                  <TabsTrigger key={t.value} value={t.value}>
-                    {t.label}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
+              onChange={(v) => setTab(TABS.find((t) => t.value === v) ?? TABS[0])}
+              label="Trailer list"
+            />
           }
         />
 

@@ -1,8 +1,8 @@
 import { ChevronDown, ArrowUpDown, RotateCcw, X } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,26 +57,12 @@ export function MediaFilters<C extends string>({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-3">
-        {/* Category segmented control */}
-        <div className="glass inline-flex flex-wrap gap-1 rounded-full border border-white/10 p-1">
-          {categories.map((cat) => {
-            const active = state.category === cat.value;
-            return (
-              <button
-                key={cat.value}
-                onClick={() => onChange({ category: cat.value })}
-                className={cn(
-                  'rounded-full px-3.5 py-1.5 text-sm font-medium transition-all',
-                  active
-                    ? 'bg-primary text-primary-foreground shadow-[0_0_18px_-6px_var(--primary)]'
-                    : 'text-muted-foreground hover:text-foreground cursor-pointer',
-                )}
-              >
-                {cat.label}
-              </button>
-            );
-          })}
-        </div>
+        <SegmentedControl
+          options={categories}
+          value={state.category}
+          onChange={(category) => onChange({ category })}
+          label="Category"
+        />
 
         <div className="ml-auto flex items-center gap-2">
           {/* Genres */}

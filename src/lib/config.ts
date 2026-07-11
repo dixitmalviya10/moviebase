@@ -1,4 +1,4 @@
-/** TMDB image CDN sizing helpers and app-wide constants. */
+/** TMDB image CDN sizing helpers and route path builders. */
 
 const IMG_BASE = 'https://image.tmdb.org/t/p';
 
@@ -32,19 +32,3 @@ export function mediaPath(
     : '';
   return `/${media}/${id}${slug}`;
 }
-
-export const NAV_LINKS = {
-  movies: [
-    { label: 'Popular', to: '/movie' },
-    { label: 'Now Playing', to: '/movie/now-playing' },
-    { label: 'Upcoming', to: '/movie/upcoming' },
-    { label: 'Top Rated', to: '/movie/top-rated' },
-  ],
-  tv: [
-    { label: 'Popular', to: '/tv' },
-    { label: 'Airing Today', to: '/tv/airing-today' },
-    { label: 'On TV', to: '/tv/on-the-air' },
-    { label: 'Top Rated', to: '/tv/top-rated' },
-  ],
-  people: [{ label: 'Popular People', to: '/person' }],
-} as const;

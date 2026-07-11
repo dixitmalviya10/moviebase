@@ -1,6 +1,6 @@
 import { Search, Loader2, X } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { SegmentedControl } from '@/components/ui/segmented-control';
 import { PERSON_CATEGORIES, type PersonCategory } from '@/lib/person-filters';
 
 interface Props {
@@ -30,32 +30,15 @@ export function PersonFilters({
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <div
-        className={cn(
-          'glass inline-flex flex-wrap gap-1 rounded-full border border-white/10 p-1 transition-opacity',
-          searchActive && 'opacity-60',
-        )}
-      >
-        {PERSON_CATEGORIES.map((cat) => {
-          const active = !searchActive && category === cat.value;
-          return (
-            <button
-              key={cat.value}
-              onClick={() => onCategoryChange(cat.value)}
-              className={cn(
-                'rounded-full px-3.5 py-1.5 text-sm font-medium transition-all',
-                active
-                  ? 'bg-primary text-primary-foreground shadow-[0_0_18px_-6px_var(--primary)]'
-                  : 'text-muted-foreground hover:text-foreground cursor-pointer',
-              )}
-            >
-              {cat.label}
-            </button>
-          );
-        })}
-      </div>
+      <SegmentedControl
+        options={PERSON_CATEGORIES}
+        value={searchActive ? null : category}
+        onChange={onCategoryChange}
+        label="Category"
+        dimmed={searchActive}
+      />
 
-      <div className="relative ml-auto w-full sm:w-72">
+      <div className="relative min-w-0 flex-1 sm:ml-auto sm:w-72 sm:flex-none">
         <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <input
           value={query}

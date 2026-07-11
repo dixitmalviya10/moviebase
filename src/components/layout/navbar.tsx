@@ -1,6 +1,14 @@
 import * as React from 'react';
 import { Link } from '@tanstack/react-router';
-import { Clapperboard, ChevronDown, Menu } from 'lucide-react';
+import {
+  Clapperboard,
+  ChevronDown,
+  Menu,
+  Film,
+  Tv,
+  Users,
+  type LucideIcon,
+} from 'lucide-react';
 import { motion, useScroll, useMotionValueEvent } from 'framer-motion';
 
 import { cn } from '@/lib/utils';
@@ -11,12 +19,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { ThemeToggle } from '@/components/theme-toggle';
 
 type NavItem = { label: string; category: string };
 type NavGroup = {
   label: string;
   base: '/movie' | '/tv' | '/person';
+  icon: LucideIcon;
   items: NavItem[];
 };
 
@@ -24,6 +42,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Movies',
     base: '/movie',
+    icon: Film,
     items: [
       { label: 'Popular', category: 'popular' },
       { label: 'Now Playing', category: 'now_playing' },
@@ -34,6 +53,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'TV Shows',
     base: '/tv',
+    icon: Tv,
     items: [
       { label: 'Popular', category: 'popular' },
       { label: 'Airing Today', category: 'airing_today' },
@@ -44,6 +64,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'People',
     base: '/person',
+    icon: Users,
     items: [{ label: 'Popular People', category: 'popular' }],
   },
 ];
@@ -71,6 +92,76 @@ function NavDropdown({ group }: { group: NavGroup }) {
         ))}
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+/**
+ * Nav on small screens. The links are grouped by section rather than flattened
+ * into one list — nine sibling entries reading "Movies / Popular", "TV Shows /
+ * Popular", … forces the reader to parse a breadcrumb on every row to work out
+ * where they'd land.
+ */
+function MobileMenu() {
+  return (
+    <Sheet>
+      <SheetTrigger asChild className="md:hidden">
+        <Button variant="glass" size="icon" className="rounded-full">
+          <Menu className="size-5" />
+          <span className="sr-only">Open menu</span>
+        </Button>
+      </SheetTrigger>
+
+      <SheetContent side="left" className="gap-0 p-0">
+        <SheetHeader>
+          <SheetTitle className="sr-only">Navigation menu</SheetTitle>
+          <SheetDescription className="sr-only">
+            Browse movies, TV shows and people.
+          </SheetDescription>
+
+          <SheetClose asChild>
+            <Link to="/" className="flex w-fit items-center gap-2">
+              <span className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-[0_0_18px_-4px_var(--primary)]">
+                <Clapperboard className="size-4.5" />
+              </span>
+              <span className="font-display text-base font-extrabold tracking-tight">
+                Movie<span className="text-gradient-gold">Base</span>
+              </span>
+            </Link>
+          </SheetClose>
+        </SheetHeader>
+
+        <nav className="flex-1 overflow-y-auto p-3">
+          {NAV_GROUPS.map((group) => (
+            <div key={group.label} className="mb-5 last:mb-0">
+              <p className="flex items-center gap-2 px-3 pb-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <group.icon className="size-3.5" />
+                {group.label}
+              </p>
+
+              <ul>
+                {group.items.map((item) => (
+                  <li key={item.category}>
+                    <SheetClose asChild>
+                      <Link
+                        to={group.base}
+                        search={{ category: item.category }}
+                        className="block rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-accent hover:text-accent-foreground"
+                        activeProps={{
+                          className:
+                            'bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary',
+                        }}
+                      >
+                        {item.label}
+                      </Link>
+                    </SheetClose>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+      </SheetContent>
+    </Sheet>
   );
 }
 
@@ -113,32 +204,7 @@ export function Navbar() {
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
 
-          {/* Mobile menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild className="md:hidden">
-              <Button variant="glass" size="icon" className="rounded-full">
-                <Menu className="size-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-48 z-99">
-              {NAV_GROUPS.flatMap((group) =>
-                group.items.map((item) => (
-                  <DropdownMenuItem
-                    key={`${group.base}-${item.category}`}
-                    asChild
-                  >
-                    <Link to={group.base} search={{ category: item.category }}>
-                      <span className="text-muted-foreground">
-                        {group.label}
-                      </span>
-                      <span className="mx-1 opacity-40">/</span>
-                      {item.label}
-                    </Link>
-                  </DropdownMenuItem>
-                )),
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <MobileMenu />
         </div>
       </div>
     </motion.header>
