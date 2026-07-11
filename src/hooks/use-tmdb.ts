@@ -10,11 +10,16 @@ import {
   type MovieFilterState,
 } from '@/lib/movie-filters';
 import { buildTvDiscoverParams, type TvFilterState } from '@/lib/tv-filters';
+import {
+  personListRequest,
+  type PersonFilterState,
+} from '@/lib/person-filters';
 import type {
   Genre,
   MediaItem,
   MovieDetails,
   Paginated,
+  PersonItem,
   TimeWindow,
   TvDetails,
   VideoResults,
@@ -157,6 +162,26 @@ export function useInfiniteTvShows(state: TvFilterState) {
       last.page < Math.min(last.total_pages, 500)
         ? last.page + 1
         : undefined,
+    staleTime: 1000 * 60 * 5,
+  });
+}
+
+/**
+ * Infinite people feed for the People page. There is no `/discover/person`, so
+ * the category preset (or an active name query) selects the endpoint outright.
+ * Previous results are kept while a new query resolves, so typing in the search
+ * box doesn't flash the grid back to a skeleton.
+ */
+export function useInfinitePeople(state: PersonFilterState) {
+  const { url, params } = personListRequest(state);
+  return useInfiniteQuery({
+    queryKey: ['people', state],
+    queryFn: ({ pageParam }) =>
+      tmdbGet<Paginated<PersonItem>>(url, { ...params, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (last) =>
+      last.page < Math.min(last.total_pages, 500) ? last.page + 1 : undefined,
+    placeholderData: keepPreviousData,
     staleTime: 1000 * 60 * 5,
   });
 }
