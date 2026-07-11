@@ -31,6 +31,24 @@ export function formatRating(vote?: number | null): string {
   return vote.toFixed(1);
 }
 
+/** Whole years lived — measured to the date of death, or to today if living. */
+export function calculateAge(
+  birthday?: string | null,
+  deathday?: string | null,
+): number | null {
+  if (!birthday) return null;
+  const birth = new Date(birthday);
+  const end = deathday ? new Date(deathday) : new Date();
+  if (Number.isNaN(birth.getTime()) || Number.isNaN(end.getTime())) return null;
+
+  let age = end.getFullYear() - birth.getFullYear();
+  const monthsApart = end.getMonth() - birth.getMonth();
+  if (monthsApart < 0 || (monthsApart === 0 && end.getDate() < birth.getDate()))
+    age--;
+
+  return age >= 0 ? age : null;
+}
+
 const currencyFmt = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',

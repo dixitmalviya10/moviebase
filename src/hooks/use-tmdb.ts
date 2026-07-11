@@ -19,6 +19,7 @@ import type {
   MediaItem,
   MovieDetails,
   Paginated,
+  PersonDetails,
   PersonItem,
   TimeWindow,
   TvDetails,
@@ -87,6 +88,22 @@ export function useTvDetails(id: number | null) {
     queryFn: () =>
       tmdbGet<TvDetails>(`/tv/${id}`, {
         append_to_response: 'credits,videos,recommendations,similar,external_ids',
+      }),
+    enabled: id != null && !Number.isNaN(id),
+    staleTime: 1000 * 60 * 30,
+  });
+}
+
+/**
+ * Full detail for a single person. `combined_credits` merges their movie and TV
+ * work into one list (each entry carries its own `media_type`).
+ */
+export function usePersonDetails(id: number | null) {
+  return useQuery({
+    queryKey: ['person', 'details', id],
+    queryFn: () =>
+      tmdbGet<PersonDetails>(`/person/${id}`, {
+        append_to_response: 'combined_credits,external_ids',
       }),
     enabled: id != null && !Number.isNaN(id),
     staleTime: 1000 * 60 * 30,
