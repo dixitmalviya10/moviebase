@@ -8,6 +8,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { Navbar } from '@/components/layout/navbar';
 import { Footer } from '@/components/layout/footer';
 import { ComingSoon } from '@/components/coming-soon';
+import { Analytics } from '@/components/analytics';
 import {
   DEFAULT_DESCRIPTION,
   DEFAULT_TITLE,
@@ -59,6 +60,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col">
       <HeadContent />
+      <Analytics />
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
