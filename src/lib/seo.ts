@@ -40,12 +40,7 @@ export const DEFAULT_TITLE = 'MovieBase — Discover Movies, TV Shows & People';
 export const DEFAULT_DESCRIPTION =
   'Discover millions of movies, TV shows and people. Search, browse trending titles, read cast and crew credits, and watch the latest trailers.';
 
-/**
- * Social preview image for pages with no artwork of their own (home, browse).
- *
- * TODO: replace with a purpose-made 1200×630 branded card — this reuses the
- * hero banner, which is 16:9 and so gets cropped slightly by Facebook/X.
- */
+/** Social preview image for pages with no artwork of their own (home, browse). */
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/assets/images/movie-banner.jpg`;
 
 /** Longest description search engines and social cards will actually show. */

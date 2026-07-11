@@ -17,9 +17,6 @@ export const img = {
     path ? `${IMG_BASE}/${size}${path}` : null,
 };
 
-export const PLACEHOLDER_POSTER = '/assets/images/no-image.png';
-export const PLACEHOLDER_PROFILE = '/assets/images/no-photo.jpg';
-
 /** Build a slugged detail path, e.g. /movie/27205-inception */
 export function mediaPath(
   media: 'movie' | 'tv' | 'person',
