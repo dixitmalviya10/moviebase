@@ -6,24 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0b0b0f" />
 
-    <!-- Speed up the first poster/backdrop paint: TMDB's CDN is on the critical path. -->
+
     <link rel="preconnect" href="https://image.tmdb.org" />
     <link rel="preconnect" href="https://api.themoviedb.org" />
     <link rel="dns-prefetch" href="https://image.tmdb.org" />
 
-    <!--
-      Static SEO fallback.
-
-      The app is client-rendered, so per-route tags are injected by TanStack
-      Router's <HeadContent /> once JS runs. These tags cover the case where it
-      doesn't: link-preview crawlers (Facebook, X, WhatsApp, Slack, LinkedIn)
-      never execute JS and would otherwise see an empty <head>.
-
-      Every tag here is marked data-seo-fallback and removed in main.tsx before
-      React mounts. React does not dedupe against pre-existing tags, so leaving
-      them would produce two <title> elements — and the browser honours the
-      first, which would pin every route to this generic title.
-    -->
     <title data-seo-fallback>MovieBase — Discover Movies, TV Shows &amp; People</title>
     <meta
       data-seo-fallback
@@ -64,7 +51,6 @@
       content="/assets/images/movie-banner.jpg"
     />
     <script>
-      // Apply persisted theme before paint to avoid a flash.
       (function () {
         try {
           var t = localStorage.getItem('moviebase-theme') || 'dark';
