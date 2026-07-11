@@ -140,12 +140,54 @@ export interface EpisodeBrief {
   vote_average?: number;
 }
 
-/** TV shows carry no top-level imdb_id — it arrives via append_to_response. */
+/**
+ * TV shows carry no top-level imdb_id — it arrives via append_to_response.
+ * TMDB returns empty strings, not null, for accounts a subject doesn't have.
+ */
 export interface ExternalIds {
   imdb_id?: string | null;
   facebook_id?: string | null;
   instagram_id?: string | null;
   twitter_id?: string | null;
+  tiktok_id?: string | null;
+  youtube_id?: string | null;
+}
+
+/** One entry from a person's combined (movie + TV) credits. */
+export interface PersonCredit extends MediaItem {
+  credit_id?: string;
+  /** Set on cast credits. */
+  character?: string;
+  /** Set on crew credits. */
+  job?: string;
+  department?: string;
+  /** TV credits only — episodes the person appears in. */
+  episode_count?: number;
+}
+
+export interface PersonCredits {
+  cast: PersonCredit[];
+  crew: PersonCredit[];
+}
+
+/** Full person detail response (with combined_credits/external_ids appended). */
+export interface PersonDetails {
+  id: number;
+  name: string;
+  biography?: string;
+  birthday?: string | null;
+  deathday?: string | null;
+  /** 0 unknown · 1 female · 2 male · 3 non-binary */
+  gender?: number;
+  place_of_birth?: string | null;
+  profile_path?: string | null;
+  known_for_department?: string;
+  homepage?: string | null;
+  imdb_id?: string | null;
+  popularity?: number;
+  also_known_as?: string[];
+  combined_credits?: PersonCredits;
+  external_ids?: ExternalIds;
 }
 
 /** Full movie detail response (with credits/videos/recommendations appended). */
